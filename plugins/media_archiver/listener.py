@@ -224,6 +224,7 @@ async def _process_media_item(
     user_id: int,
     message_id: int,
     seq: int,
+    skip_url_refresh: bool = False,
 ) -> bool:
     """
     处理单个媒体项：去重检查 -> 下载 -> 归档 -> 记录元数据。
@@ -231,6 +232,10 @@ async def _process_media_item(
     当直连下载失败（如历史消息 URL 过期）时，会尝试通过 NapCat API
     获取新的下载地址再试一次。如果仍然失败，对于视频/语音等类型还会
     尝试从 NapCat 本地缓存目录直接复制。
+
+    Args:
+        skip_url_refresh: 为 True 时跳过 _get_fresh_url，直接使用 item.url。
+                          用于合并转发消息，避免 get_image API 超时。
 
     Returns:
         True 表示成功归档，False 表示失败或被去重跳过。
@@ -252,11 +257,16 @@ async def _process_media_item(
         # 2. 下载文件到临时目录
         temp_dir = cfg.get_archive_path() / ".tmp"
 
-        # 历史消息的 CDN URL 大概率已过期，优先通过 API 获取新鲜地址
-        # 避免直连过期 URL 挂起 120 秒超时
-        download_url = await _get_fresh_url(bot, item)
-        if not download_url:
-            download_url = item.url  # 无新鲜 URL 时用原 URL 碰运气
+        # 合并转发消息的图片无法通过 get_image 获取（NapCat 找不到本地缓存），
+        # 用 skip_url_refresh 跳过 API 调用，直接使用 item.url 直连 CDN。
+        if skip_url_refresh:
+            download_url = item.url
+        else:
+            # 历史消息的 CDN URL 大概率已过期，优先通过 API 获取新鲜地址
+            # 避免直连过期 URL 挂起 120 秒超时
+            download_url = await _get_fresh_url(bot, item)
+            if not download_url:
+                download_url = item.url  # 无新鲜 URL 时用原 URL 碰运气
 
         logger.warning("  [下载] URL=%s", (download_url or "空")[:120])
 
@@ -674,6 +684,7 @@ async def _process_forward_content(
                 ok = await _process_media_item(
                     bot=bot, item=item, group_id=group_id,
                     user_id=sub_uid, message_id=sub_mid, seq=idx,
+                    skip_url_refresh=True,
                 )
                 if ok:
                     archived_count += 1
@@ -776,7 +787,7 @@ async def _process_forward_message(
                 bot=bot, item=item, group_id=group_id,
                 user_id=inner_user_id,
                 message_id=inner_msg_id or source_message_id,
-                seq=idx,
+                seq=idx, skip_url_refresh=True,
             )
 
 
