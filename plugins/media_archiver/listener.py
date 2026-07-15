@@ -106,6 +106,29 @@ async def handle_message(bot: Bot, event: Event) -> None:
     if not cfg.is_group_watched(group_id):
         return
 
+    # 检查是否有合并转发（forward）消息段
+    forward_segments = [seg for seg in event.message if seg.type == "forward"]
+    if forward_segments:
+        logger.warning(
+            "检测到合并转发消息 | 群: %d | 用户: %d | 消息ID: %d | 共 %d 段",
+            group_id, user_id, message_id, len(forward_segments),
+        )
+        for seg in forward_segments:
+            forward_id = seg.data.get("id", "")
+            if not forward_id:
+                continue
+            task = asyncio.create_task(
+                _process_forward_message(
+                    bot=bot, forward_id=forward_id,
+                    group_id=group_id, user_id=user_id,
+                    source_message_id=message_id,
+                ),
+                name=f"forward-{message_id}",
+            )
+            _background_tasks.add(task)
+            task.add_done_callback(_background_tasks.discard)
+        return
+
     # 提取媒体项
     media_items = classify_message(event.message)
     if not media_items:
@@ -397,6 +420,20 @@ async def _scan_group_history(
             except Exception:
                 continue
 
+            # 处理合并转发消息
+            forward_ids = [
+                seg.data.get("id", "") for seg in onebot_msg
+                if seg.type == "forward" and seg.data.get("id")
+            ]
+            if forward_ids:
+                for fid in forward_ids:
+                    await _process_forward_message(
+                        bot=bot, forward_id=fid,
+                        group_id=group_id, user_id=user_id,
+                        source_message_id=msg_id,
+                    )
+                continue
+
             # 提取媒体项
             media_items = classify_message(onebot_msg)
             if not media_items:
@@ -560,6 +597,187 @@ async def _copy_local_file(item: MediaItem, temp_dir: Path) -> Path | None:
 
     logger.debug("[本地复制] 未找到匹配文件: %s (in %s)", raw_name, search_root)
     return None
+
+
+async def _process_forward_content(
+    bot: Bot,
+    items: list,
+    group_id: int,
+    default_user_id: int,
+    default_msg_id: int,
+) -> int:
+    """
+    递归处理已展开的 forward content 消息列表。
+    items 中的每条消息可能包含媒体（image/video/record/file）或嵌套的 forward。
+
+    Returns:
+        成功归档的媒体项数量。
+    """
+    from nonebot.adapters.onebot.v11 import Message, MessageSegment
+
+    archived_count = 0
+
+    for i, sub_msg in enumerate(items):
+        sub_raw = sub_msg.get("message", [])
+        if not sub_raw:
+            continue
+
+        # 转成 MessageSegment 对象
+        try:
+            if isinstance(sub_raw, list) and len(sub_raw) > 0 and isinstance(sub_raw[0], dict):
+                segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in sub_raw if isinstance(s, dict)]
+                sub_onebot = Message(segs)
+            else:
+                sub_onebot = Message(sub_raw)
+        except Exception as e:
+            logger.warning("  forward_content[%d] Message 构造失败: %s", i, e)
+            continue
+
+        sub_uid = sub_msg.get("user_id", 0) or sub_msg.get("sender", {}).get("user_id", 0) or default_user_id
+        sub_mid = sub_msg.get("message_id", 0) or default_msg_id
+
+        # 递归处理嵌套的 forward
+        sub_fwd_segs = [s for s in sub_onebot if s.type == "forward"]
+        if sub_fwd_segs:
+            for sf_seg in sub_fwd_segs:
+                sf_id = sf_seg.data.get("id", "")
+                if not sf_id:
+                    continue
+                sf_content = sf_seg.data.get("content") or sf_seg.data.get("messages")
+                if sf_content and isinstance(sf_content, list):
+                    archived_count += await _process_forward_content(
+                        bot=bot, items=sf_content, group_id=group_id,
+                        default_user_id=sub_uid, default_msg_id=sub_mid,
+                    )
+                else:
+                    try:
+                        sf_result = await bot.call_api("get_forward_msg", id=sf_id)
+                        sf_msgs = []
+                        if isinstance(sf_result, dict):
+                            sf_msgs = sf_result.get("messages", [])
+                        if sf_msgs:
+                            archived_count += await _process_forward_content(
+                                bot=bot, items=sf_msgs, group_id=group_id,
+                                default_user_id=sub_uid, default_msg_id=sub_mid,
+                            )
+                    except Exception as e:
+                        logger.warning("  嵌套 forward %s 无法展开: %s", sf_id, e)
+
+        # 提取并处理媒体项（含 forward 的消息也可能同时有图片）
+        media_items = classify_message(sub_onebot)
+        if not media_items:
+            continue
+
+        cfg = get_config()
+        for idx, item in enumerate(media_items):
+            if getattr(cfg.media_types, item.media_type, False):
+                ok = await _process_media_item(
+                    bot=bot, item=item, group_id=group_id,
+                    user_id=sub_uid, message_id=sub_mid, seq=idx,
+                )
+                if ok:
+                    archived_count += 1
+
+    return archived_count
+
+
+async def _process_forward_message(
+    bot: Bot,
+    forward_id: str,
+    group_id: int,
+    user_id: int,
+    source_message_id: int,
+) -> None:
+    """
+    处理合并转发（forward）消息：拆包后递归提取媒体项。
+    """
+    from nonebot.adapters.onebot.v11 import Message, MessageSegment
+
+    try:
+        result = await bot.call_api("get_forward_msg", id=forward_id)
+    except Exception as e:
+        logger.warning("合并转发消息无法获取，跳过: forward_id=%s, %s", forward_id, e)
+        return
+
+    messages = []
+    if isinstance(result, dict):
+        messages = result.get("messages", [])
+
+    if not messages:
+        logger.debug("合并转发消息 %s 为空", forward_id)
+        return
+
+    logger.warning(
+        "拆包合并转发消息 | forward_id=%s | 源消息ID: %d | 内含 %d 条消息",
+        forward_id, source_message_id, len(messages),
+    )
+
+    for inner in messages:
+        inner_msg_id = inner.get("message_id", 0)
+        inner_user_id = inner.get("user_id", 0) or inner.get("sender", {}).get("user_id", 0)
+        inner_user_id = inner_user_id or user_id
+        raw_segments = inner.get("message", [])
+
+        if not raw_segments:
+            continue
+
+        # 转成 MessageSegment 对象
+        try:
+            if isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
+                segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
+                onebot_msg = Message(segs)
+            else:
+                onebot_msg = Message(raw_segments)
+        except Exception:
+            continue
+
+        # 递归处理内层 forward
+        forward_inner = [s for s in onebot_msg if s.type == "forward"]
+        if forward_inner:
+            for seg in forward_inner:
+                fid = seg.data.get("id", "")
+                if not fid:
+                    continue
+
+                content = seg.data.get("content") or seg.data.get("messages")
+                if content and isinstance(content, list):
+                    await _process_forward_content(
+                        bot=bot, items=content, group_id=group_id,
+                        default_user_id=inner_user_id,
+                        default_msg_id=inner_msg_id or source_message_id,
+                    )
+                else:
+                    try:
+                        fwd_result = await bot.call_api("get_forward_msg", id=fid)
+                        fwd_msgs = []
+                        if isinstance(fwd_result, dict):
+                            fwd_msgs = fwd_result.get("messages", [])
+                        if fwd_msgs:
+                            await _process_forward_content(
+                                bot=bot, items=fwd_msgs, group_id=group_id,
+                                default_user_id=inner_user_id,
+                                default_msg_id=inner_msg_id or source_message_id,
+                            )
+                    except Exception as e:
+                        logger.warning("内层 forward %s 无法展开: %s", fid, e)
+            continue
+
+        # 提取并处理媒体项
+        media_items = classify_message(onebot_msg)
+        if not media_items:
+            continue
+
+        cfg = get_config()
+        for idx, item in enumerate(media_items):
+            if not getattr(cfg.media_types, item.media_type, False):
+                continue
+
+            await _process_media_item(
+                bot=bot, item=item, group_id=group_id,
+                user_id=inner_user_id,
+                message_id=inner_msg_id or source_message_id,
+                seq=idx,
+            )
 
 
 async def _on_bot_connect(bot: Bot) -> None:
