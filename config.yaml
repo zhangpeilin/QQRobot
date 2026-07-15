@@ -1,0 +1,45 @@
+# ==========================================
+# QQ 群媒体自动归档系统 - 业务配置
+# ==========================================
+
+# 监听的群号列表（留空 = 监听所有群）
+watch_groups: []
+# 示例：
+# watch_groups:
+#   - 123456789
+#   - 987654321
+
+# 归档存储根目录（支持绝对路径和相对路径）
+archive_root: "./data/archive"
+
+# 下载并发控制
+download:
+  max_concurrent: 3
+  timeout: 120
+  max_retries: 3
+  retry_base_delay: 2
+
+# 文件类型开关
+media_types:
+  image: true
+  video: true
+  record: true
+  file: true
+
+# 去重设置
+dedup:
+  enabled: true
+  strategy: "md5"
+
+# 日志设置
+logging:
+  level: "INFO"
+  file: "./logs/archiver.log"
+  max_size_mb: 50
+  backup_count: 5
+
+# 启动时历史消息扫描
+startup_scan:
+  enabled: true           # 启动时是否扫描历史消息
+  time_range_hours: 0     # 时间范围（小时），0 = 全部历史
+  max_per_group: 500      # 每个群最多拉取的消息条数
