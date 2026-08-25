@@ -43,7 +43,8 @@ class Archiver:
         """
         计算归档路径（不创建文件）。
 
-        目录结构: {archive_root}/{group_id}/{type_dir}/{YYYY-MM}/{DD}/{filename}
+        群聊: {archive_root}/{group_id}/{type_dir}/{YYYY-MM}/{DD}/{filename}
+        私聊: {archive_root}/private/{user_id}/{type_dir}/{YYYY-MM}/{DD}/{filename}
         """
         now = datetime.now(_CST)
         type_dir = get_media_type_dir(media_type)
@@ -56,6 +57,11 @@ class Archiver:
         short_md5 = md5_prefix[:8] if md5_prefix else "00000000"
         filename = f"{user_id}_{ts}_{short_md5}{ext}"
 
+        if group_id == 0:
+            return (
+                self.archive_root / "private" / str(user_id)
+                / type_dir / date_dir / day_dir / filename
+            )
         return self.archive_root / str(group_id) / type_dir / date_dir / day_dir / filename
 
     async def archive_file(

@@ -4,6 +4,7 @@
 import asyncio
 import logging
 import os
+import re
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -15,16 +16,20 @@ from nonebot.adapters.onebot.v11 import (
     Event,
     GroupMessageEvent,
     Message,
+    PrivateMessageEvent,
 )
 
 from .archiver import Archiver
 from .classifier import MediaItem, classify_message
 from .config import get_config
 from .database import close_database, get_database
-from .downloader import AsyncDownloader, DownloadError
+from .downloader import AsyncDownloader, DownloadError, DownloadResult
 
 if TYPE_CHECKING:
     from .database import MediaDatabase
+
+# 私聊消息的虚拟 group_id（数据库与归档目录用于区分群聊/私聊）
+_PRIVATE_GROUP_ID = 0
 
 # NapCat 本地数据根目录（从 get_image 返回的路径反推）
 # 格式: D:\QQFile\Tencent Files\Tencent Files\{QQ}\nt_qq\nt_data
@@ -92,26 +97,34 @@ msg_handler = on_message(priority=50, block=False)
 
 @msg_handler.handle()
 async def handle_message(bot: Bot, event: Event) -> None:
-    """处理每一条消息"""
-    # 只处理群消息
-    if not isinstance(event, GroupMessageEvent):
-        return
-
+    """处理每一条消息（群聊 + 私聊白名单）"""
     cfg = get_config()
-    group_id = event.group_id
-    user_id = event.user_id
-    message_id = event.message_id
 
-    # 检查是否在监听列表中
-    if not cfg.is_group_watched(group_id):
+    # 群消息：按 watch_groups 过滤
+    if isinstance(event, GroupMessageEvent):
+        group_id = event.group_id
+        user_id = event.user_id
+        if not cfg.is_group_watched(group_id):
+            return
+        scope_label = f"群{group_id}"
+    # 私聊消息：按 private_watch_users 白名单过滤
+    elif isinstance(event, PrivateMessageEvent):
+        user_id = event.user_id
+        if not cfg.is_private_user_watched(user_id):
+            return
+        group_id = _PRIVATE_GROUP_ID
+        scope_label = f"私聊[{user_id}]"
+    else:
         return
+
+    message_id = event.message_id
 
     # 检查是否有合并转发（forward）消息段
     forward_segments = [seg for seg in event.message if seg.type == "forward"]
     if forward_segments:
         logger.warning(
-            "检测到合并转发消息 | 群: %d | 用户: %d | 消息ID: %d | 共 %d 段",
-            group_id, user_id, message_id, len(forward_segments),
+            "检测到合并转发消息 | %s | 用户: %d | 消息ID: %d | 共 %d 段",
+            scope_label, user_id, message_id, len(forward_segments),
         )
         for seg in forward_segments:
             forward_id = seg.data.get("id", "")
@@ -135,8 +148,8 @@ async def handle_message(bot: Bot, event: Event) -> None:
         return
 
     logger.warning(
-        "检测到 %d 个媒体项 | 群: %d | 用户: %d | 消息ID: %d",
-        len(media_items), group_id, user_id, message_id,
+        "检测到 %d 个媒体项 | %s | 用户: %d | 消息ID: %d",
+        len(media_items), scope_label, user_id, message_id,
     )
 
     # 为每个媒体项创建后台下载任务
@@ -245,7 +258,8 @@ async def _process_media_item(
     assert _db is not None
 
     cfg = get_config()
-    tag = f"[{item.media_type}][群{group_id}][消息{message_id}]"
+    scope = f"私聊[{user_id}]" if group_id == _PRIVATE_GROUP_ID else f"群{group_id}"
+    tag = f"[{item.media_type}][{scope}][消息{message_id}]"
 
     try:
         # 1. 消息级去重：同一消息的同一类型是否已处理
@@ -271,23 +285,37 @@ async def _process_media_item(
         logger.warning("  [下载] URL=%s", (download_url or "空")[:120])
 
         result: DownloadResult | None = None
-        try:
-            result = await _downloader.download(download_url, temp_dir)
-        except DownloadError:
-            # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
-            if item.media_type in ("video", "record", "file"):
-                local_path = await _copy_local_file(item, temp_dir)
-                if local_path:
-                    logger.warning(
-                        "%s CDN 下载失败，本地缓存复制成功，继续归档", tag,
-                    )
-                    result = DownloadResult(
-                        temp_path=local_path,
-                        file_size=local_path.stat().st_size,
-                    )
-            if result is None:
-                logger.error("%s 下载失败（直连+API+本地均无效）: %s", tag, download_url[:80])
+        # NapCat 历史消息中的视频/文件 URL 常为本地文件路径，
+        # 检测到本地路径时直接复制，不走 HTTP 下载
+        if _is_local_path(download_url):
+            local_path = await _copy_local_path(download_url, temp_dir)
+            if local_path:
+                logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
+                result = DownloadResult(
+                    temp_path=local_path,
+                    file_size=local_path.stat().st_size,
+                )
+            else:
+                logger.error("%s 本地文件不存在或复制失败: %s", tag, download_url[:80])
                 return False
+        else:
+            try:
+                result = await _downloader.download(download_url, temp_dir)
+            except DownloadError:
+                # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
+                if item.media_type in ("video", "record", "file"):
+                    local_path = await _copy_local_file(item, temp_dir)
+                    if local_path:
+                        logger.warning(
+                            "%s CDN 下载失败，本地缓存复制成功，继续归档", tag,
+                        )
+                        result = DownloadResult(
+                            temp_path=local_path,
+                            file_size=local_path.stat().st_size,
+                        )
+                if result is None:
+                    logger.error("%s 下载失败（直连+API+本地均无效）: %s", tag, download_url[:80])
+                    return False
 
         # 下载成功 -> 继续后续步骤
         return await _finalize_media_item(
@@ -343,14 +371,23 @@ async def _scan_all_groups(bot: Bot) -> None:
 
     if not watched:
         logger.info("没有需要扫描的群（watch_groups 列表为空，或 Bot 未加入任何群）")
-        _scan_started = False
-        return
+    else:
+        logger.info("共 %d 个群需要扫描", len(watched))
 
-    logger.info("共 %d 个群需要扫描", len(watched))
+        for group_info in watched:
+            group_id = group_info.get("group_id") or group_info.get("group_id", 0)
+            await _scan_group_history(bot, group_id, scan_cfg)
 
-    for group_info in watched:
-        group_id = group_info.get("group_id") or group_info.get("group_id", 0)
-        await _scan_group_history(bot, group_id, scan_cfg)
+    # 私聊历史扫描（白名单用户）
+    if scan_cfg.private_enabled and cfg.private_watch_users:
+        logger.warning(
+            "开始扫描私聊历史 | 白名单: %s | 时间范围: %s | 每用户上限: %d",
+            cfg.private_watch_users,
+            "全部" if scan_cfg.time_range_hours == 0 else f"{scan_cfg.time_range_hours}小时",
+            scan_cfg.max_per_group,
+        )
+        for uid in cfg.private_watch_users:
+            await _scan_private_history(bot, uid, scan_cfg)
 
     logger.warning("历史消息扫描完成")
 
@@ -498,6 +535,149 @@ async def _scan_group_history(
         )
 
 
+async def _scan_private_history(
+    bot: Bot, user_id: int, scan_cfg: "StartupScanConfig",
+) -> None:
+    """扫描单个私聊对象的历史消息并提取媒体文件。"""
+    cfg = get_config()
+    cutoff_time: float | None = None
+    if scan_cfg.time_range_hours > 0:
+        cutoff_time = time.time() - scan_cfg.time_range_hours * 3600
+
+    fetched = 0
+    cursor_msg_seq: int | None = None  # None = 从最新开始
+    seen_message_ids: set[int] = set()  # 翻页去重检测
+    scanned = 0
+    archived = 0
+
+    while fetched < scan_cfg.max_per_group:
+        count = min(20, scan_cfg.max_per_group - fetched)
+        try:
+            params: dict = {"user_id": user_id, "count": count}
+            if cursor_msg_seq is not None:
+                params["message_seq"] = cursor_msg_seq
+            result = await bot.call_api("get_friend_msg_history", **params)
+        except Exception as e:
+            logger.error("拉取私聊 %d 历史消息失败: %s", user_id, e)
+            break
+
+        # 解析返回的消息列表
+        messages = []
+        if isinstance(result, dict):
+            messages = result.get("messages", result.get("data", {}).get("messages", []))
+        elif isinstance(result, list):
+            messages = result
+
+        if not messages:
+            logger.info("私聊 %d 历史消息已拉取完毕（共 %d 条）", user_id, fetched)
+            break
+
+        # 翻页去重检测
+        batch_ids = {msg.get("message_id", 0) for msg in messages}
+        if batch_ids.issubset(seen_message_ids):
+            logger.info(
+                "私聊 %d 翻页无新消息（已拉取 %d 条，均为重复），停止扫描",
+                user_id, fetched,
+            )
+            break
+        seen_message_ids.update(batch_ids)
+
+        for msg in messages:
+            msg_time = msg.get("time", 0)
+
+            # 检查时间范围
+            if cutoff_time and msg_time < cutoff_time:
+                logger.info(
+                    "私聊 %d 已超出时间范围（%d 条后停止）", user_id, fetched
+                )
+                return
+
+            msg_id = msg.get("message_id", 0)
+            sender_id = (
+                msg.get("user_id", 0)
+                or msg.get("sender", {}).get("user_id", 0)
+                or user_id
+            )
+            raw_segments = msg.get("message", [])
+
+            if not raw_segments:
+                continue
+
+            # 历史消息的 raw_segments 是 list[dict], 需转成 MessageSegment
+            try:
+                if raw_segments and isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
+                    from nonebot.adapters.onebot.v11 import MessageSegment
+                    segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
+                    onebot_msg = Message(segs)
+                else:
+                    onebot_msg = Message(raw_segments)
+            except Exception:
+                continue
+
+            # 处理合并转发消息
+            forward_ids = [
+                seg.data.get("id", "") for seg in onebot_msg
+                if seg.type == "forward" and seg.data.get("id")
+            ]
+            if forward_ids:
+                for fid in forward_ids:
+                    await _process_forward_message(
+                        bot=bot, forward_id=fid,
+                        group_id=_PRIVATE_GROUP_ID, user_id=sender_id,
+                        source_message_id=msg_id,
+                    )
+                continue
+
+            # 提取媒体项
+            media_items = classify_message(onebot_msg)
+            if not media_items:
+                continue
+
+            scanned += 1
+            logger.warning(
+                "  [私聊扫描] uid=%s 找到 %d 个媒体项",
+                user_id, len(media_items),
+            )
+
+            for idx, item in enumerate(media_items):
+                if not getattr(cfg.media_types, item.media_type, False):
+                    continue
+
+                ok = await _process_media_item(
+                    bot=bot, item=item,
+                    group_id=_PRIVATE_GROUP_ID, user_id=sender_id,
+                    message_id=msg_id, seq=idx,
+                )
+                if ok:
+                    archived += 1
+
+        # 翻页：用 batch 中最小的 message_seq 作为下一页游标
+        msg_seqs_in_batch = [
+            msg.get("message_seq", 0) for msg in messages if msg.get("message_seq")
+        ]
+        if msg_seqs_in_batch:
+            cursor_msg_seq = min(msg_seqs_in_batch)
+        else:
+            cursor_msg_seq = None
+        fetched += len(messages)
+
+        logger.debug(
+            "私聊 %d 已拉取 %d 条消息 | 含媒体: %d | 已归档: %d",
+            user_id, fetched, scanned, archived,
+        )
+
+    if fetched >= scan_cfg.max_per_group:
+        logger.info(
+            "私聊 %d 已达拉取上限 %d 条（含媒体 %d 条，归档 %d 个）",
+            user_id, scan_cfg.max_per_group, scanned, archived,
+        )
+    else:
+        logger.warning(
+            "私聊 %d 扫描完成 | 拉取: %d 条 | 含媒体: %d | 归档: %d",
+            user_id, fetched, scanned, archived,
+        )
+
+
 async def _get_fresh_url(bot: Bot, item: MediaItem) -> str | None:
     """
     通过 NapCat API 获取媒体文件的新的下载地址。
@@ -553,6 +733,36 @@ async def _get_fresh_url(bot: Bot, item: MediaItem) -> str | None:
                 )
 
     return None
+
+
+def _is_local_path(url: str) -> bool:
+    """判断 URL 是否为本地文件路径（Windows 盘符路径或 UNC 路径）"""
+    if not url:
+        return False
+    if re.match(r"^[a-zA-Z]:[\\/]", url):
+        return True
+    if url.startswith("\\\\"):
+        return True
+    return False
+
+
+async def _copy_local_path(src_str: str, temp_dir: Path) -> Path | None:
+    """将已知的本地文件路径直接复制到临时目录（不走 HTTP）"""
+    src = Path(src_str)
+    if not src.is_file():
+        logger.warning("[本地复制] 源文件不存在: %s", src)
+        return None
+    dst = temp_dir / src.name
+    try:
+        async with aiofiles.open(src, "rb") as f_src:
+            content = await f_src.read()
+        async with aiofiles.open(dst, "wb") as f_dst:
+            await f_dst.write(content)
+        logger.warning("[本地复制] %s -> %s", src, dst)
+        return dst
+    except Exception as e:
+        logger.warning("[本地复制] 复制失败: %s", e)
+        return None
 
 
 async def _copy_local_file(item: MediaItem, temp_dir: Path) -> Path | None:

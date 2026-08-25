@@ -9,6 +9,14 @@ watch_groups: []
 #   - 123456789
 #   - 987654321
 
+# 私聊归档白名单（指定 QQ 号列表；留空 = 不归档任何私聊）
+# 示例：
+# private_watch_users:
+#   - 10001
+#   - 10002
+private_watch_users:
+  - 512239520
+
 # 归档存储根目录（支持绝对路径和相对路径）
 archive_root: "./data/archive"
 
@@ -41,5 +49,6 @@ logging:
 # 启动时历史消息扫描
 startup_scan:
   enabled: true           # 启动时是否扫描历史消息
+  private_enabled: true   # 是否扫描私聊历史消息（配合 private_watch_users 白名单）
   time_range_hours: 0     # 时间范围（小时），0 = 全部历史
-  max_per_group: 500      # 每个群最多拉取的消息条数
+  max_per_group: 500      # 每个群/每个私聊对象最多拉取的消息条数

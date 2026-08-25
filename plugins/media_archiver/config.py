@@ -47,15 +47,19 @@ class StartupScanConfig(BaseModel):
     enabled: bool = False
     """是否启用启动扫描"""
 
+    private_enabled: bool = False
+    """是否扫描私聊历史消息（需配合 private_watch_users 白名单）"""
+
     time_range_hours: int = Field(default=0, ge=0)
     """时间范围（小时），0 = 全部历史消息"""
 
     max_per_group: int = Field(default=500, ge=1, le=5000)
-    """每个群最多拉取的消息条数"""
+    """每个群/每个私聊对象最多拉取的消息条数"""
 
 
 class AppConfig(BaseModel):
     watch_groups: list[int] = Field(default_factory=list)
+    private_watch_users: list[int] = Field(default_factory=list)
     archive_root: str = "./data/archive"
     download: DownloadConfig = Field(default_factory=DownloadConfig)
     media_types: MediaTypesConfig = Field(default_factory=MediaTypesConfig)
@@ -75,6 +79,10 @@ class AppConfig(BaseModel):
         if not self.watch_groups:
             return True
         return group_id in self.watch_groups
+
+    def is_private_user_watched(self, user_id: int) -> bool:
+        """判断私聊对象是否在白名单中（空列表 = 不归档任何私聊）"""
+        return user_id in self.private_watch_users
 
 
 _config: AppConfig | None = None
