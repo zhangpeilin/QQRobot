@@ -296,9 +296,12 @@ async def _process_media_item(
                 )
             if local_path is None:
                 # 本地缓存全无 -> get_file 从服务器重新下载
-                local_path = await _try_get_file_download(
-                    bot, item, download_url, temp_dir,
-                )
+                # 注意：转发场景(get_file 实测必然 file not found 且等待
+                # downloadRichMedia 超时)跳过，仅普通历史消息尝试
+                if not skip_url_refresh:
+                    local_path = await _try_get_file_download(
+                        bot, item, download_url, temp_dir,
+                    )
             if local_path:
                 logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
                 result = DownloadResult(
@@ -315,8 +318,9 @@ async def _process_media_item(
                 # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
                 if item.media_type in ("video", "record", "file"):
                     local_path = await _copy_local_file(item, temp_dir)
-                    if local_path is None:
+                    if local_path is None and not skip_url_refresh:
                         # 本地缓存全无 -> get_file 从服务器重新下载
+                        # （转发场景跳过：实测必然 file not found 且超时）
                         local_path = await _try_get_file_download(
                             bot, item, item.url or download_url, temp_dir,
                         )
