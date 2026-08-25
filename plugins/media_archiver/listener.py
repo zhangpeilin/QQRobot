@@ -294,14 +294,6 @@ async def _process_media_item(
                 local_path = await _copy_local_file(
                     item, temp_dir, url=download_url,
                 )
-            if local_path is None:
-                # 本地缓存全无 -> get_file 从服务器重新下载
-                # 注意：转发场景(get_file 实测必然 file not found 且等待
-                # downloadRichMedia 超时)跳过，仅普通历史消息尝试
-                if not skip_url_refresh:
-                    local_path = await _try_get_file_download(
-                        bot, item, download_url, temp_dir,
-                    )
             if local_path:
                 logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
                 result = DownloadResult(
@@ -318,12 +310,6 @@ async def _process_media_item(
                 # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
                 if item.media_type in ("video", "record", "file"):
                     local_path = await _copy_local_file(item, temp_dir)
-                    if local_path is None and not skip_url_refresh:
-                        # 本地缓存全无 -> get_file 从服务器重新下载
-                        # （转发场景跳过：实测必然 file not found 且超时）
-                        local_path = await _try_get_file_download(
-                            bot, item, item.url or download_url, temp_dir,
-                        )
                     if local_path:
                         logger.warning(
                             "%s CDN 下载失败，本地缓存复制成功，继续归档", tag,
@@ -873,64 +859,6 @@ async def _copy_local_file(
                 return await _copy_src_to_temp(found[0], temp_dir)
 
     logger.debug("[本地复制] 跨账号未找到匹配文件: %s", item.file_name)
-    return None
-
-
-async def _try_get_file_download(
-    bot: Bot, item: MediaItem, url: str, temp_dir: Path,
-) -> Path | None:
-    """
-    通过 NapCat get_file API 从服务器重新下载媒体文件。
-
-    本地缓存完全缺失时的兜底：get_file 支持按文件名在服务器侧搜索
-    资源并下载（searchForFile + downloadFileById），返回
-    {file: 本地路径, url, file_size, file_name}；返回的 url 为
-    CDN 地址时也可直接下载。
-    """
-    # 候选参数：消息段 file 名、URL 文件名、file_id
-    candidates: list[str] = []
-    if item.file_name:
-        candidates.append(item.file_name)
-    if url:
-        url_name = Path(url).name
-        if url_name:
-            candidates.append(url_name)
-    if item.file_id:
-        candidates.append(item.file_id)
-
-    seen: set[str] = set()
-    for cand in candidates:
-        if not cand or cand in seen:
-            continue
-        seen.add(cand)
-        try:
-            logger.warning("[get_file] 尝试从服务器重新下载: file=%s", cand[:80])
-            resp = await bot.call_api("get_file", file=cand, timeout=300)
-        except Exception as e:
-            logger.warning(
-                "[get_file] %s 失败: %s: %s", cand[:60], type(e).__name__, e,
-            )
-            continue
-        if not isinstance(resp, dict):
-            continue
-
-        # 1) NapCat 下载到本地缓存后的路径
-        local = resp.get("file", "")
-        if local and isinstance(local, str):
-            src = Path(local)
-            if src.is_file():
-                logger.warning("[get_file] 服务器重新下载成功: %s", src)
-                return await _copy_src_to_temp(src, temp_dir)
-
-        # 2) 返回的 HTTP 下载地址
-        http_url = resp.get("url", "")
-        if http_url and isinstance(http_url, str) and http_url.startswith("http"):
-            try:
-                result = await _downloader.download(http_url, temp_dir)
-                return result.temp_path
-            except DownloadError as e:
-                logger.warning("[get_file] URL 下载失败: %s", e)
-
     return None
 
 
