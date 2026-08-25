@@ -1,53 +1,52 @@
 @echo off
-chcp 65001 >/dev/null
-title NapCatQQ - QQ 媒体归档服务
+chcp 65001 >nul
+title NapCatQQ - Desktop Mode
 color 0A
 
 echo ========================================
-echo   NapCatQQ 协议层启动器
+echo   NapCatQQ Desktop Mode Launcher
 echo ========================================
 echo.
 
-:: 检查管理员权限
-net session >/dev/null 2>&1
+:: Check admin privileges
+net session >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-    echo [!] 需要管理员权限，正在请求提权...
+    echo [WARN] Need administrator privileges, elevating...
     powershell -Command "Start-Process '%~f0' -Verb runAs"
     exit /b
 )
 
-:: 设置 NapCat 环境变量
+:: NapCat environment variables
 set "NAPCAT_DIR=%~dp0NapCat"
-set NAPCAT_PATCH_PACKAGE=%NAPCAT_DIR%\qqnt.json
-set NAPCAT_LOAD_PATH=%NAPCAT_DIR%\loadNapCat.js
-set NAPCAT_INJECT_PATH=%NAPCAT_DIR%\NapCatWinBootHook.dll
-set NAPCAT_LAUNCHER_PATH=%NAPCAT_DIR%\NapCatWinBootMain.exe
-set NAPCAT_MAIN_PATH=%NAPCAT_DIR%\napcat.mjs
+set "NAPCAT_PATCH_PACKAGE=%NAPCAT_DIR%\qqnt.json"
+set "NAPCAT_LOAD_PATH=%NAPCAT_DIR%\loadNapCat.js"
+set "NAPCAT_INJECT_PATH=%NAPCAT_DIR%\NapCatWinBootHook.dll"
+set "NAPCAT_LAUNCHER_PATH=%NAPCAT_DIR%\NapCatWinBootMain.exe"
+set "NAPCAT_MAIN_PATH=%NAPCAT_DIR%\napcat.mjs"
 
-:: QQ 路径
+:: QQ path
 set "QQPath=C:\Program Files\Tencent\QQNT\QQ.exe"
 
 if not exist "%QQPath%" (
-    echo [ERROR] 找不到 QQ.exe: %QQPath%
+    echo [ERROR] QQ.exe not found: %QQPath%
     pause
     exit /b 1
 )
 
-:: 生成加载脚本
+:: Generate loader script
 set "NAPCAT_MAIN_UNIX=%NAPCAT_MAIN_PATH:\=/%"
 echo (async () =^> {await import("file:///%NAPCAT_MAIN_UNIX%")})() > "%NAPCAT_LOAD_PATH%"
 
-echo [INFO] QQ 路径: %QQPath%
-echo [INFO] NapCat 路径: %NAPCAT_DIR%
+echo [INFO] QQ path: %QQPath%
+echo [INFO] NapCat path: %NAPCAT_DIR%
 echo.
-echo [INFO] 正在启动 NapCatQQ...
-echo [INFO] 启动后请在 QQ 窗口扫码登录小号
-echo [INFO] 登录成功后 WebUI 地址和密钥会显示在下方
+echo [INFO] Starting NapCatQQ desktop mode...
+echo [INFO] Please scan QR code with your QQ account in the QQ window.
 echo.
 echo ----------------------------------------
 echo.
 
-:: 启动 NapCat（如果传入了 QQ 号则自动登录）
+:: Launch NapCat (with optional auto-login QQ number)
 if "%~1" neq "" (
     "%NAPCAT_LAUNCHER_PATH%" "%QQPath%" "%NAPCAT_INJECT_PATH%" %1
 ) else (
