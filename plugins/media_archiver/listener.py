@@ -31,10 +31,10 @@ if TYPE_CHECKING:
 # 私聊消息的虚拟 group_id（数据库与归档目录用于区分群聊/私聊）
 _PRIVATE_GROUP_ID = 0
 
-# NapCat 本地数据根目录（从 get_image 返回的路径反推）
+# 本机 QQ 文件存储根目录（所有账号的 nt_data 均在其下，跨账号搜索用）
 # 格式: D:\QQFile\Tencent Files\Tencent Files\{QQ}\nt_qq\nt_data
-_NAP_CAT_DATA = Path(
-    "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data"
+_QQ_FILE_ROOT = Path(
+    "D:\\QQFile\\Tencent Files\\Tencent Files"
 )
 
 logger = logging.getLogger("media_archiver.listener")
@@ -285,10 +285,15 @@ async def _process_media_item(
         logger.warning("  [下载] URL=%s", (download_url or "空")[:120])
 
         result: DownloadResult | None = None
-        # NapCat 历史消息中的视频/文件 URL 常为本地文件路径，
+        # NapCat 历史消息/转发消息中的视频 URL 常为本地文件路径，
         # 检测到本地路径时直接复制，不走 HTTP 下载
         if _is_local_path(download_url):
             local_path = await _copy_local_path(download_url, temp_dir)
+            if local_path is None:
+                # 目标账号缓存缺失 -> 跨账号按相对路径/文件名搜索
+                local_path = await _copy_local_file(
+                    item, temp_dir, url=download_url,
+                )
             if local_path:
                 logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
                 result = DownloadResult(
@@ -746,12 +751,31 @@ def _is_local_path(url: str) -> bool:
     return False
 
 
-async def _copy_local_path(src_str: str, temp_dir: Path) -> Path | None:
-    """将已知的本地文件路径直接复制到临时目录（不走 HTTP）"""
-    src = Path(src_str)
-    if not src.is_file():
-        logger.warning("[本地复制] 源文件不存在: %s", src)
-        return None
+def _account_data_roots() -> list[Path]:
+    """发现本机所有 QQ 账号的 nt_data 数据根目录"""
+    roots: list[Path] = []
+    if not _QQ_FILE_ROOT.is_dir():
+        return roots
+    for account_dir in _QQ_FILE_ROOT.iterdir():
+        if not account_dir.is_dir():
+            continue
+        nt_data = account_dir / "nt_qq" / "nt_data"
+        if nt_data.is_dir():
+            roots.append(nt_data)
+    return roots
+
+
+def _rel_after_nt_data(url: str) -> str:
+    """提取本地路径 URL 中 nt_data 之后的相对路径（如 Video/2026-08/Ori/x.mp4）"""
+    marker = "nt_data"
+    idx = url.find(marker)
+    if idx == -1:
+        return ""
+    return url[idx + len(marker):].strip("\\/ ").replace("\\", "/")
+
+
+async def _copy_src_to_temp(src: Path, temp_dir: Path) -> Path | None:
+    """将本地文件复制到临时目录"""
     dst = temp_dir / src.name
     try:
         async with aiofiles.open(src, "rb") as f_src:
@@ -765,19 +789,29 @@ async def _copy_local_path(src_str: str, temp_dir: Path) -> Path | None:
         return None
 
 
-async def _copy_local_file(item: MediaItem, temp_dir: Path) -> Path | None:
-    """
-    尝试从 NapCat 本地数据目录复制媒体文件。
-
-    当 CDN URL 过期且 API 刷新不可用时，NapCat 实际已在本地缓存了
-    媒体文件（通过 get_image 结果可知），可以直接复制而非 HTTP 下载。
-
-    Returns:
-        复制到的临时文件路径，未找到返回 None。
-    """
-    if not item.file_name:
+async def _copy_local_path(src_str: str, temp_dir: Path) -> Path | None:
+    """将已知的本地文件路径直接复制到临时目录（不走 HTTP）"""
+    src = Path(src_str)
+    if not src.is_file():
+        logger.warning("[本地复制] 源文件不存在: %s", src)
         return None
+    return await _copy_src_to_temp(src, temp_dir)
 
+
+async def _copy_local_file(
+    item: MediaItem, temp_dir: Path, url: str = "",
+) -> Path | None:
+    """
+    尝试从本机任意 QQ 账号的 NapCat 本地数据目录复制媒体文件。
+
+    合并转发消息中的视频 URL 指向接收账号（bot 小号）的缓存路径，
+    但文件可能实际缓存在同机其他账号下（如日常主账号多端同步），
+    因此按 URL 相对路径/文件名跨账号搜索。
+
+    Args:
+        url: 本地路径 URL，用于提取 nt_data 相对路径精确匹配，
+             失败时回退到按文件名 rglob 搜索。
+    """
     # 媒体类型 -> 数据子目录映射
     type_dir = {
         "image": "Pic",
@@ -788,34 +822,43 @@ async def _copy_local_file(item: MediaItem, temp_dir: Path) -> Path | None:
     if sub_dir is None:
         return None
 
-    # 文件名字符串清理
-    raw_name = item.file_name.strip()
-
-    # 要尝试的文件名变体（原始 + 小写）
-    candidates = [raw_name, raw_name.lower()]
-
-    search_root = _NAP_CAT_DATA / sub_dir
-    if not search_root.is_dir():
-        logger.debug("NapCat 数据目录不存在: %s", search_root)
+    nt_datas = _account_data_roots()
+    if not nt_datas:
+        logger.debug("未找到任何 QQ 账号的 nt_data 目录")
         return None
 
-    for variant in candidates:
-        found = list(search_root.rglob(variant))
-        if found:
-            src = found[0]
-            dst = temp_dir / src.name
-            logger.warning("[本地复制] 找到文件: %s -> %s", src, dst)
-            try:
-                async with aiofiles.open(src, "rb") as f_src:
-                    content = await f_src.read()
-                async with aiofiles.open(dst, "wb") as f_dst:
-                    await f_dst.write(content)
-                return dst
-            except Exception as e:
-                logger.warning("[本地复制] 复制失败: %s", e)
-                return None
+    # 1) 按 URL 相对路径精确尝试（如 Video/2026-08/Ori/xxx.mp4）
+    rel = _rel_after_nt_data(url)
+    if rel:
+        for nt_data in nt_datas:
+            src = nt_data / rel
+            if src.is_file():
+                return await _copy_src_to_temp(src, temp_dir)
 
-    logger.debug("[本地复制] 未找到匹配文件: %s (in %s)", raw_name, search_root)
+    # 2) 按文件名变体跨账号 rglob 搜索
+    candidates: list[str] = []
+    if item.file_name:
+        raw = item.file_name.strip()
+        candidates.extend([raw, raw.lower()])
+    if url:
+        url_name = Path(url).name
+        if url_name:
+            candidates.extend([url_name, url_name.lower()])
+
+    seen: set[str] = set()
+    for variant in candidates:
+        if variant in seen:
+            continue
+        seen.add(variant)
+        for nt_data in nt_datas:
+            search_root = nt_data / sub_dir
+            if not search_root.is_dir():
+                continue
+            found = list(search_root.rglob(variant))
+            if found:
+                return await _copy_src_to_temp(found[0], temp_dir)
+
+    logger.debug("[本地复制] 跨账号未找到匹配文件: %s", item.file_name)
     return None
 
 
