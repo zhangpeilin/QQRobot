@@ -57,6 +57,16 @@ class StartupScanConfig(BaseModel):
     """每个群/每个私聊对象最多拉取的消息条数"""
 
 
+class NotifyConfig(BaseModel):
+    """微信通知配置（Server酱，免费版每天 5 条）"""
+
+    enabled: bool = False
+    """是否启用微信通知（默认关闭）"""
+
+    sendkey: str = ""
+    """Server酱 SendKey，在 https://sct.ftqq.com 扫码获取"""
+
+
 class AppConfig(BaseModel):
     watch_groups: list[int] = Field(default_factory=list)
     private_watch_users: list[int] = Field(default_factory=list)
@@ -66,6 +76,7 @@ class AppConfig(BaseModel):
     dedup: DedupConfig = Field(default_factory=DedupConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     startup_scan: StartupScanConfig = Field(default_factory=StartupScanConfig)
+    notify: NotifyConfig = Field(default_factory=NotifyConfig)
 
     def get_archive_path(self) -> Path:
         """解析归档根目录为绝对路径"""

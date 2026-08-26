@@ -436,6 +436,23 @@ async def _scan_all_groups(bot: Bot) -> None:
 
     logger.warning("历史消息扫描完成")
 
+    # 微信通知：扫描完成汇总（未启用通知时静默跳过）
+    try:
+        from .notifier import send_notification
+
+        stats = await _db.get_stats()
+        total = sum(s.get("count", 0) for s in stats.values())
+        detail = "\n".join(
+            f"- {k}: {v.get('count', 0)} 个 / {v.get('total_size', 0) / 1048576:.1f} MB"
+            for k, v in sorted(stats.items())
+        )
+        await send_notification(
+            "QQ 归档扫描完成",
+            f"累计归档 **{total}** 个媒体文件\n\n{detail}",
+        )
+    except Exception as e:
+        logger.warning("发送扫描完成通知失败: %s", e)
+
 
 async def _process_history_message(
     bot: Bot, msg: dict, group_id: int,

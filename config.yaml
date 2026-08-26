@@ -52,3 +52,8 @@ startup_scan:
   private_enabled: true   # 是否扫描私聊历史消息（配合 private_watch_users 白名单）
   time_range_hours: 0     # 时间范围（小时），0 = 全部历史
   max_per_group: 500      # 每个群/每个私聊对象最多拉取的消息条数
+
+# 微信通知（Server酱，免费版每天 5 条）
+notify:
+  enabled: false          # 默认关闭，开启需填 sendkey
+  sendkey: ""             # https://sct.ftqq.com 扫码获取 SendKey
