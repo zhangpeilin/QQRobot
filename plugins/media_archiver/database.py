@@ -67,7 +67,13 @@ class MediaDatabase:
         file_size: int = 0,
         source_url: str = "",
     ) -> int:
-        """插入一条媒体记录，返回 row id"""
+        """
+        插入一条媒体记录。
+
+        Returns:
+            实际插入的行数（INSERT OR IGNORE 遇到唯一约束冲突时返回 0，
+            表示记录已存在、本次未插入）。
+        """
         assert self._db is not None
         cursor = await self._db.execute(
             """INSERT OR IGNORE INTO media_records
@@ -81,7 +87,7 @@ class MediaDatabase:
             ),
         )
         await self._db.commit()
-        return cursor.lastrowid  # type: ignore
+        return cursor.rowcount  # type: ignore
 
     async def exists_by_message(self, message_id: int, media_type: str) -> bool:
         """根据消息 ID + 类型判断是否已记录"""

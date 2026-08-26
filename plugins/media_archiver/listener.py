@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -31,6 +32,12 @@ if TYPE_CHECKING:
 # 私聊消息的虚拟 group_id（数据库与归档目录用于区分群聊/私聊）
 _PRIVATE_GROUP_ID = 0
 
+# 转发拆包消息的 message_id 偏移量：转发拆包出的内层消息 ID 可能与
+# 真实消息 ID 冲突（同一原始消息既被普通归档又被转发拆包），导致
+# UNIQUE(message_id, media_type) 冲突使 INSERT 被忽略、文件成为孤儿。
+# 拆包消息统一加偏移，避免与真实消息 ID 空间重叠。
+_FORWARD_ID_OFFSET = 10**17
+
 # 本机 QQ 文件存储根目录（所有账号的 nt_data 均在其下，跨账号搜索用）
 # 格式: D:\QQFile\Tencent Files\Tencent Files\{QQ}\nt_qq\nt_data
 _QQ_FILE_ROOT = Path(
@@ -44,6 +51,10 @@ _downloader: AsyncDownloader | None = None
 _archiver: Archiver | None = None
 _db: MediaDatabase | None = None
 _background_tasks: set[asyncio.Task] = set()
+
+# 扫描并发信号量：限制同时进行的媒体处理数（get_file 触发 NapCat
+# downloadMedia 可能长时间阻塞，串行等待会让扫描极慢）
+_scan_sem = asyncio.Semaphore(3)
 
 
 async def _startup() -> None:
@@ -190,6 +201,13 @@ async def _finalize_media_item(
     """
     cfg = get_config()
 
+    # 0. 消息级去重：同一消息的同一类型已归档过则跳过（防止 UNIQUE 冲突
+    #    导致文件已保存但记录未插入的孤儿文件，避免重复归档）
+    if await _db.exists_by_message(message_id, item.media_type):
+        logger.info("%s 消息已归档过（message_id 级），删除临时文件", tag)
+        result.temp_path.unlink(missing_ok=True)
+        return False
+
     # 3. MD5 去重（下载后计算哈希）
     if cfg.dedup.enabled and cfg.dedup.strategy == "md5":
         from .dedup import compute_file_md5
@@ -211,7 +229,7 @@ async def _finalize_media_item(
     )
 
     # 5. 记录元数据
-    await _db.insert_record(
+    row_id = await _db.insert_record(
         message_id=message_id,
         group_id=group_id,
         user_id=user_id,
@@ -222,6 +240,15 @@ async def _finalize_media_item(
         file_size=result.file_size,
         source_url=item.url,
     )
+
+    # 5b. INSERT 被唯一约束忽略（rowid=0）说明记录已存在：文件已 move，
+    #     删除刚归档的文件避免成为无记录孤儿（下次扫描无法去重）
+    if not row_id:
+        logger.warning(
+            "%s 记录插入被忽略（消息已存在记录），删除已归档文件", tag,
+        )
+        storage_path.unlink(missing_ok=True)
+        return False
 
     logger.warning(
         "%s 保存成功 | %s | %d bytes | %s",
@@ -294,6 +321,15 @@ async def _process_media_item(
                 local_path = await _copy_local_file(
                     item, temp_dir, url=download_url,
                 )
+            if local_path is None:
+                # 本地缓存全无 -> get_file 按文件名命中 NapCat 资源引用
+                # 缓存（直接发送的视频 24h 内有效），换取 CDN URL 下载。
+                # 转发拆包视频的 downloadMedia 必然超时（消息不在本地库），
+                # 跳过避免每个白等 1-2 分钟拖慢扫描
+                if not skip_url_refresh:
+                    local_path = await _try_get_file_download(
+                        bot, item, download_url, temp_dir,
+                    )
             if local_path:
                 logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
                 result = DownloadResult(
@@ -308,8 +344,16 @@ async def _process_media_item(
                 result = await _downloader.download(download_url, temp_dir)
             except DownloadError:
                 # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
-                if item.media_type in ("video", "record", "file"):
+                # （图片收到时自动缓存 Pic 目录；get_file 可按文件名
+                #   命中缓存或从服务器搜索下载）
+                if item.media_type in ("video", "record", "file", "image"):
                     local_path = await _copy_local_file(item, temp_dir)
+                    if local_path is None and not skip_url_refresh:
+                        # 本地缓存全无 -> get_file 命中资源引用缓存换 CDN URL
+                        # （转发拆包视频跳过：downloadMedia 必然超时）
+                        local_path = await _try_get_file_download(
+                            bot, item, item.url or download_url, temp_dir,
+                        )
                     if local_path:
                         logger.warning(
                             "%s CDN 下载失败，本地缓存复制成功，继续归档", tag,
@@ -397,11 +441,86 @@ async def _scan_all_groups(bot: Bot) -> None:
     logger.warning("历史消息扫描完成")
 
 
+async def _process_history_message(
+    bot: Bot, msg: dict, group_id: int,
+    scan_cfg: "StartupScanConfig", cutoff_time: float | None,
+) -> int:
+    """
+    处理单条历史消息（含合并转发/媒体项）。
+
+    Returns:
+        -1 表示超出时间范围（应停止扫描）；否则返回成功归档的媒体项数。
+    """
+    cfg = get_config()
+    msg_time = msg.get("time", 0)
+
+    # 检查时间范围
+    if cutoff_time and msg_time < cutoff_time:
+        return -1
+
+    msg_id = msg.get("message_id", 0)
+    user_id = msg.get("user_id", 0) or msg.get("sender", {}).get("user_id", 0)
+    raw_segments = msg.get("message", [])
+
+    if not raw_segments:
+        return 0
+
+    # 历史消息的 raw_segments 是 list[dict], 需转成 MessageSegment
+    try:
+        if raw_segments and isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
+            from nonebot.adapters.onebot.v11 import MessageSegment
+            segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
+            onebot_msg = Message(segs)
+        else:
+            onebot_msg = Message(raw_segments)
+    except Exception:
+        return 0
+
+    # 处理合并转发消息
+    forward_ids = [
+        seg.data.get("id", "") for seg in onebot_msg
+        if seg.type == "forward" and seg.data.get("id")
+    ]
+    if forward_ids:
+        for fid in forward_ids:
+            await _process_forward_message(
+                bot=bot, forward_id=fid,
+                group_id=group_id, user_id=user_id,
+                source_message_id=msg_id,
+            )
+        return 0
+
+    # 提取媒体项
+    media_items = classify_message(onebot_msg)
+    if not media_items:
+        return 0
+
+    logger.warning(
+        "  [扫描] msg_id=%s 找到 %d 个媒体项",
+        msg_id, len(media_items),
+    )
+
+    archived = 0
+    for idx, item in enumerate(media_items):
+        if not getattr(cfg.media_types, item.media_type, False):
+            continue
+
+        # 并发控制：限制同时进行的媒体处理数
+        async with _scan_sem:
+            ok = await _process_media_item(
+                bot=bot, item=item, group_id=group_id,
+                user_id=user_id, message_id=msg_id, seq=idx,
+            )
+        if ok:
+            archived += 1
+
+    return archived
+
+
 async def _scan_group_history(
     bot: Bot, group_id: int, scan_cfg: "StartupScanConfig",
 ) -> None:
-    """扫描单个群的历史消息并提取媒体文件。"""
-    cfg = get_config()
+    """扫描单个群的历史消息并提取媒体文件（批次内并发处理）。"""
     cutoff_time: float | None = None
     if scan_cfg.time_range_hours > 0:
         cutoff_time = time.time() - scan_cfg.time_range_hours * 3600
@@ -444,74 +563,35 @@ async def _scan_group_history(
             break
         seen_message_ids.update(batch_ids)
 
-        for msg in messages:
-            msg_time = msg.get("time", 0)
+        # 批次内并发处理所有消息
+        tasks = [
+            asyncio.create_task(
+                _process_history_message(
+                    bot=bot, msg=msg, group_id=group_id,
+                    scan_cfg=scan_cfg, cutoff_time=cutoff_time,
+                ),
+                name=f"scan-{msg.get('message_id', 0)}",
+            )
+            for msg in messages
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            # 检查时间范围
-            if cutoff_time and msg_time < cutoff_time:
+        stop_scan = False
+        for r in results:
+            if isinstance(r, Exception):
+                logger.warning("历史消息处理异常: %s", r)
+                continue
+            if r == -1:
                 logger.info(
                     "群 %d 已超出时间范围（%d 条后停止）", group_id, fetched
                 )
-                return
-
-            msg_id = msg.get("message_id", 0)
-            user_id = msg.get("user_id", 0) or msg.get("sender", {}).get("user_id", 0)
-            raw_segments = msg.get("message", [])
-
-            if not raw_segments:
-                continue
-
-            # 历史消息的 raw_segments 是 list[dict], 需转成 MessageSegment
-            try:
-                if raw_segments and isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
-                    from nonebot.adapters.onebot.v11 import MessageSegment
-                    segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
-                    onebot_msg = Message(segs)
-                else:
-                    onebot_msg = Message(raw_segments)
-            except Exception:
-                continue
-
-            # 处理合并转发消息
-            forward_ids = [
-                seg.data.get("id", "") for seg in onebot_msg
-                if seg.type == "forward" and seg.data.get("id")
-            ]
-            if forward_ids:
-                for fid in forward_ids:
-                    await _process_forward_message(
-                        bot=bot, forward_id=fid,
-                        group_id=group_id, user_id=user_id,
-                        source_message_id=msg_id,
-                    )
-                continue
-
-            # 提取媒体项
-            media_items = classify_message(onebot_msg)
-            if not media_items:
-                continue
-
-            scanned += 1
-            logger.warning(
-                "  [扫描] msg_id=%s 找到 %d 个媒体项: %s",
-                msg_id, len(media_items),
-                [(m.media_type, m.url[:60] if m.url else "无URL", m.file_name[:30] if m.file_name else "") for m in media_items],
-            )
-
-            for idx, item in enumerate(media_items):
-                if not getattr(cfg.media_types, item.media_type, False):
-                    continue
-
-                ok = await _process_media_item(
-                    bot=bot,
-                    item=item,
-                    group_id=group_id,
-                    user_id=user_id,
-                    message_id=msg_id,
-                    seq=idx,
-                )
-                if ok:
-                    archived += 1
+                stop_scan = True
+                break
+            if r > 0:
+                scanned += 1
+                archived += r
+        if stop_scan:
+            return
 
         # 翻页：用 batch 中最小的 message_seq 作为下一页游标（NapCat 返回此 seq 之前的消息）
         msg_seqs_in_batch = [
@@ -587,74 +667,36 @@ async def _scan_private_history(
             break
         seen_message_ids.update(batch_ids)
 
-        for msg in messages:
-            msg_time = msg.get("time", 0)
+        # 批次内并发处理所有消息（复用 _process_history_message，
+        # 用 _PRIVATE_GROUP_ID 作为虚拟群号）
+        tasks = [
+            asyncio.create_task(
+                _process_history_message(
+                    bot=bot, msg=msg, group_id=_PRIVATE_GROUP_ID,
+                    scan_cfg=scan_cfg, cutoff_time=cutoff_time,
+                ),
+                name=f"scan-p{user_id}-{msg.get('message_id', 0)}",
+            )
+            for msg in messages
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            # 检查时间范围
-            if cutoff_time and msg_time < cutoff_time:
+        stop_scan = False
+        for r in results:
+            if isinstance(r, Exception):
+                logger.warning("私聊 %d 历史消息处理异常: %s", user_id, r)
+                continue
+            if r == -1:
                 logger.info(
                     "私聊 %d 已超出时间范围（%d 条后停止）", user_id, fetched
                 )
-                return
-
-            msg_id = msg.get("message_id", 0)
-            sender_id = (
-                msg.get("user_id", 0)
-                or msg.get("sender", {}).get("user_id", 0)
-                or user_id
-            )
-            raw_segments = msg.get("message", [])
-
-            if not raw_segments:
-                continue
-
-            # 历史消息的 raw_segments 是 list[dict], 需转成 MessageSegment
-            try:
-                if raw_segments and isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
-                    from nonebot.adapters.onebot.v11 import MessageSegment
-                    segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
-                    onebot_msg = Message(segs)
-                else:
-                    onebot_msg = Message(raw_segments)
-            except Exception:
-                continue
-
-            # 处理合并转发消息
-            forward_ids = [
-                seg.data.get("id", "") for seg in onebot_msg
-                if seg.type == "forward" and seg.data.get("id")
-            ]
-            if forward_ids:
-                for fid in forward_ids:
-                    await _process_forward_message(
-                        bot=bot, forward_id=fid,
-                        group_id=_PRIVATE_GROUP_ID, user_id=sender_id,
-                        source_message_id=msg_id,
-                    )
-                continue
-
-            # 提取媒体项
-            media_items = classify_message(onebot_msg)
-            if not media_items:
-                continue
-
-            scanned += 1
-            logger.warning(
-                "  [私聊扫描] uid=%s 找到 %d 个媒体项",
-                user_id, len(media_items),
-            )
-
-            for idx, item in enumerate(media_items):
-                if not getattr(cfg.media_types, item.media_type, False):
-                    continue
-
-                ok = await _process_media_item(
-                    bot=bot, item=item,
-                    group_id=_PRIVATE_GROUP_ID, user_id=sender_id,
-                    message_id=msg_id, seq=idx,
-                )
-                if ok:
-                    archived += 1
+                stop_scan = True
+                break
+            if r > 0:
+                scanned += 1
+                archived += r
+        if stop_scan:
+            return
 
         # 翻页：用 batch 中最小的 message_seq 作为下一页游标
         msg_seqs_in_batch = [
@@ -862,6 +904,179 @@ async def _copy_local_file(
     return None
 
 
+async def _try_get_file_download(
+    bot: Bot, item: MediaItem, url: str, temp_dir: Path,
+) -> Path | None:
+    """
+    通过 NapCat get_file API 按文件名换取下载地址。
+
+    NapCat 转换视频段时会将 {peer, msgId, elementId, fileUUID} 以文件名为
+    键存入内存缓存（24 小时有效）。get_file(file=文件名) 命中缓存后可
+    触发 downloadMedia 从服务器下载，返回 {file: 本地路径, url: CDN 地址}。
+    对直接发送/近期收到的视频有效；转发拆包的消息缓存键不匹配，通常无效。
+    """
+    # 候选参数：消息段 file 名（带扩展名优先）、URL 文件名、file_id
+    candidates: list[str] = []
+    if item.file_name:
+        candidates.append(item.file_name)
+    if url:
+        url_name = Path(url).name
+        if url_name:
+            candidates.append(url_name)
+    if item.file_id:
+        candidates.append(item.file_id)
+
+    seen: set[str] = set()
+    for cand in candidates:
+        if not cand or cand in seen:
+            continue
+        seen.add(cand)
+
+        # downloadMedia 内部等待下载完成事件可能超时（大文件下载慢），
+        # 但下载可能在后台继续，延迟后重试一次可命中已下载的文件。
+        # 注意：转发拆包的视频消息不在本地库，downloadMedia 必然超时，
+        # 重试次数过多会浪费大量时间（每次超时 30-60s），只重试一次。
+        for attempt in range(2):
+            try:
+                logger.warning(
+                    "[get_file] 按文件名换取下载地址(第%d次): file=%s",
+                    attempt + 1, cand[:80],
+                )
+                # 注意：NoneBot call_api 用 _timeout 参数控制超时（默认 60s，
+                # 大文件 downloadMedia 下载可能超时，放宽到 300s）
+                resp = await bot.call_api("get_file", file=cand, _timeout=300)
+            except Exception as e:
+                logger.warning(
+                    "[get_file] %s 失败: %s: %s", cand[:60], type(e).__name__, e,
+                )
+                resp = None
+
+            if isinstance(resp, dict):
+                # 1) NapCat 下载到本地缓存后的路径
+                local = resp.get("file", "")
+                if local and isinstance(local, str):
+                    src = Path(local)
+                    if src.is_file():
+                        logger.warning("[get_file] 服务器重新下载成功: %s", src)
+                        return await _copy_src_to_temp(src, temp_dir)
+
+                # 2) 返回的 CDN 下载地址
+                http_url = resp.get("url", "")
+                if http_url and isinstance(http_url, str) and http_url.startswith("http"):
+                    try:
+                        result = await _downloader.download(http_url, temp_dir)
+                        return result.temp_path
+                    except DownloadError as e:
+                        logger.warning("[get_file] CDN 下载失败: %s", e)
+
+            # 失败后等待下载在后台继续，再重试
+            if attempt < 2:
+                logger.warning("[get_file] 等待 %d 秒后重试 %s ...", 20, cand[:60])
+                await asyncio.sleep(20)
+
+    return None
+
+
+# 链接/密码提取正则
+_LINK_URL_RE = re.compile(r"https?://[^\s<>\"']+")
+# 支持冒号/等号/空格/中文连接词分隔，含常见谐音变体（解鸭/解呀=解压），3 位短码
+_CODE_RE = re.compile(
+    r"(?:提取码|访问码|密码|解压码|解鸭码|解呀码|解呀吗|解鸭|解呀|"
+    r"口令|暗号|pwd|code|key)[=:：\s]*([A-Za-z0-9_-]{3,})",
+    re.IGNORECASE,
+)
+
+
+def _extract_links(text: str) -> list[str]:
+    """从文本中提取所有 URL 链接"""
+    return _LINK_URL_RE.findall(text)
+
+
+def _extract_codes(text: str) -> list[str]:
+    """从文本中提取提取码/密码/解压码等（关键词后跟的 token，支持冒号/等号/空格分隔）"""
+    return _CODE_RE.findall(text)
+
+
+async def _archive_forward_links(
+    content: list, group_id: int, source_message_id: int, user_id: int,
+) -> None:
+    """
+    提取转发消息中的网盘链接/密码等信息并存档为 markdown 文件。
+
+    存档位置: {archive_root}/{group_id}/links/{YYYY-MM}/forward_{源消息ID}.md
+
+    只要合集内存在链接或密码类内容，就将合集中的所有文本消息完整
+    存档（网盘链接后面的说明/解压密码等上下文一并保留），并标注每
+    条消息提取出的链接与密码。
+    """
+
+    def _collect_texts(sub: dict) -> str:
+        """收集消息的文本段 + json 段（群分享卡片等）内容"""
+        texts: list[str] = []
+        for s in sub.get("message", []):
+            if s.get("type") == "text":
+                texts.append(s.get("data", {}).get("text", ""))
+            elif s.get("type") == "json":
+                j = s.get("data", {}).get("data", "")
+                if isinstance(j, str):
+                    texts.append(j)
+        return "\n".join(texts).strip()
+
+    # 第一遍：判断合集内是否存在链接/密码类内容
+    any_hit = False
+    for sub in content:
+        joined = _collect_texts(sub)
+        if joined and (_extract_links(joined) or _extract_codes(joined)):
+            any_hit = True
+            break
+    if not any_hit:
+        return
+
+    # 第二遍：存档合集内所有文本消息
+    lines: list[str] = []
+    for i, sub in enumerate(content, 1):
+        sub_uid = sub.get("user_id", 0) or sub.get("sender", {}).get("user_id", 0) or user_id
+        joined = _collect_texts(sub)
+        if not joined:
+            continue
+
+        links = _extract_links(joined)
+        codes = _extract_codes(joined)
+
+        lines.append(f"## 消息 {i} (用户 {sub_uid})")
+        lines.append("> " + joined.replace("\n", "\n> "))
+        if links:
+            lines.append("")
+            lines.append("链接:")
+            lines.extend(f"- {l}" for l in links)
+        if codes:
+            lines.append("")
+            lines.append("密码/提取码:")
+            lines.extend(f"- {c}" for c in codes)
+        lines.append("")
+
+    now = datetime.now()
+    links_dir = (
+        get_config().get_archive_path()
+        / str(group_id) / "links" / now.strftime("%Y-%m")
+    )
+    links_dir.mkdir(parents=True, exist_ok=True)
+    fpath = links_dir / f"forward_{source_message_id}.md"
+
+    header = [
+        "# 转发消息链接存档",
+        f"- 转发时间: {now.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"- 群: {group_id}",
+        f"- 发送者: {user_id}",
+        f"- 源消息ID: {source_message_id}",
+        "",
+    ]
+    async with aiofiles.open(fpath, "w", encoding="utf-8") as f:
+        await f.write("\n".join(header + lines))
+
+    logger.warning("转发链接存档: %s", fpath)
+
+
 async def _process_forward_content(
     bot: Bot,
     items: list,
@@ -898,6 +1113,8 @@ async def _process_forward_content(
 
         sub_uid = sub_msg.get("user_id", 0) or sub_msg.get("sender", {}).get("user_id", 0) or default_user_id
         sub_mid = sub_msg.get("message_id", 0) or default_msg_id
+        # 转发拆包消息 ID 加偏移，避免与真实消息 ID 冲突（见 _FORWARD_ID_OFFSET）
+        sub_mid = sub_mid + _FORWARD_ID_OFFSET
 
         # 递归处理嵌套的 forward
         sub_fwd_segs = [s for s in sub_onebot if s.type == "forward"]
@@ -954,9 +1171,40 @@ async def _process_forward_message(
 ) -> None:
     """
     处理合并转发（forward）消息：拆包后递归提取媒体项。
+
+    优先用 get_msg 获取外层消息的 content（嵌套 forward 完整且图片带
+    CDN URL）；get_forward_msg 对嵌套 forward 返回 1200 失败，仅作后备。
     """
     from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
+    # 1) 主路径：get_msg 拿外层消息 content（含完整嵌套与 URL）
+    try:
+        msg_resp = await bot.call_api("get_msg", message_id=source_message_id)
+        content = None
+        if isinstance(msg_resp, dict):
+            for seg in (msg_resp.get("data", {}).get("message") or []):
+                if seg.get("type") == "forward":
+                    content = seg.get("data", {}).get("content") or []
+                    break
+        if content:
+            logger.warning(
+                "拆包合并转发消息(get_msg) | forward_id=%s | 源消息ID: %d | 内含 %d 条消息",
+                forward_id, source_message_id, len(content),
+            )
+            # 存档转发中的网盘链接/提取码等文本信息
+            await _archive_forward_links(
+                content=content, group_id=group_id,
+                source_message_id=source_message_id, user_id=user_id,
+            )
+            await _process_forward_content(
+                bot=bot, items=content, group_id=group_id,
+                default_user_id=user_id, default_msg_id=source_message_id,
+            )
+            return
+    except Exception as e:
+        logger.warning("get_msg 获取转发消息失败，尝试 get_forward_msg: %s", e)
+
+    # 2) 后备：get_forward_msg 拆包
     try:
         result = await bot.call_api("get_forward_msg", id=forward_id)
     except Exception as e:
@@ -971,6 +1219,12 @@ async def _process_forward_message(
         logger.debug("合并转发消息 %s 为空", forward_id)
         return
 
+    # 存档转发中的网盘链接/提取码等文本信息
+    await _archive_forward_links(
+        content=messages, group_id=group_id,
+        source_message_id=source_message_id, user_id=user_id,
+    )
+
     logger.warning(
         "拆包合并转发消息 | forward_id=%s | 源消息ID: %d | 内含 %d 条消息",
         forward_id, source_message_id, len(messages),
@@ -978,6 +1232,8 @@ async def _process_forward_message(
 
     for inner in messages:
         inner_msg_id = inner.get("message_id", 0)
+        # 转发拆包消息 ID 加偏移，避免与真实消息 ID 冲突（见 _FORWARD_ID_OFFSET）
+        inner_msg_id = inner_msg_id + _FORWARD_ID_OFFSET
         inner_user_id = inner.get("user_id", 0) or inner.get("sender", {}).get("user_id", 0)
         inner_user_id = inner_user_id or user_id
         raw_segments = inner.get("message", [])
