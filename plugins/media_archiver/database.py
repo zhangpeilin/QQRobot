@@ -12,6 +12,9 @@ import aiosqlite
 logger = logging.getLogger("media_archiver.database")
 
 # 建表 SQL
+# 唯一约束 (message_id, media_type, file_md5)：一条消息可含多张图片/多个
+# 媒体段（各段文件不同），仅按 (message_id, media_type) 约束会导致同消息
+# 后续媒体段记录无法插入、MD5 去重失效、重启后重复归档
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS media_records (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,13 +28,41 @@ CREATE TABLE IF NOT EXISTS media_records (
     storage_path  TEXT    NOT NULL,       -- 归档后的本地路径
     source_url    TEXT,                   -- 原始下载 URL
     created_at    REAL    NOT NULL,       -- Unix 时间戳
-    UNIQUE(message_id, media_type)
+    UNIQUE(message_id, media_type, file_md5)
 );
 
 CREATE INDEX IF NOT EXISTS idx_group ON media_records(group_id);
 CREATE INDEX IF NOT EXISTS idx_md5 ON media_records(file_md5);
 CREATE INDEX IF NOT EXISTS idx_created ON media_records(created_at);
 """
+
+
+async def _migrate_legacy_schema(db) -> None:
+    """将旧版 UNIQUE(message_id, media_type) 约束迁移为含 file_md5 的新约束"""
+    cursor = await db.execute(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='media_records'"
+    )
+    row = await cursor.fetchone()
+    if not row or not row[0]:
+        return
+    sql = row[0]
+    # 已是新约束则跳过
+    if "UNIQUE(message_id, media_type, file_md5)" in sql:
+        return
+    logger.warning("检测到旧版唯一约束，迁移 media_records 表...")
+    await db.execute("ALTER TABLE media_records RENAME TO media_records_old")
+    await db.executescript(_SCHEMA)
+    await db.execute(
+        """INSERT OR IGNORE INTO media_records
+           (message_id, group_id, user_id, media_type, file_name, file_md5,
+            file_size, storage_path, source_url, created_at)
+           SELECT message_id, group_id, user_id, media_type, file_name, file_md5,
+                  file_size, storage_path, source_url, created_at
+           FROM media_records_old"""
+    )
+    await db.execute("DROP TABLE media_records_old")
+    await db.commit()
+    logger.info("media_records 表迁移完成")
 
 
 class MediaDatabase:
@@ -42,11 +73,12 @@ class MediaDatabase:
         self._db: Optional[aiosqlite.Connection] = None
 
     async def initialize(self) -> None:
-        """打开数据库连接并建表"""
+        """打开数据库连接并建表（含旧表迁移）"""
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._db = await aiosqlite.connect(str(self.db_path))
         self._db.row_factory = aiosqlite.Row
         await self._db.executescript(_SCHEMA)
+        await _migrate_legacy_schema(self._db)
         await self._db.commit()
         logger.info("数据库已初始化: %s", self.db_path)
 

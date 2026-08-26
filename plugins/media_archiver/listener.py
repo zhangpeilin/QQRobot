@@ -201,12 +201,9 @@ async def _finalize_media_item(
     """
     cfg = get_config()
 
-    # 0. 消息级去重：同一消息的同一类型已归档过则跳过（防止 UNIQUE 冲突
-    #    导致文件已保存但记录未插入的孤儿文件，避免重复归档）
-    if await _db.exists_by_message(message_id, item.media_type):
-        logger.info("%s 消息已归档过（message_id 级），删除临时文件", tag)
-        result.temp_path.unlink(missing_ok=True)
-        return False
+    # 注：不做 message_id 级去重——一条消息可含多张图片/多个媒体段，
+    # 按 (message_id, media_type) 去重会误杀同消息的后续图片。
+    # 防重复归档由 MD5 去重兜底（同文件不会重复保存）。
 
     # 3. MD5 去重（下载后计算哈希）
     if cfg.dedup.enabled and cfg.dedup.strategy == "md5":
@@ -241,14 +238,13 @@ async def _finalize_media_item(
         source_url=item.url,
     )
 
-    # 5b. INSERT 被唯一约束忽略（rowid=0）说明记录已存在：文件已 move，
-    #     删除刚归档的文件避免成为无记录孤儿（下次扫描无法去重）
+    # 5b. INSERT 被唯一约束忽略：同消息多图场景（UNIQUE(message_id,
+    #     media_type) 只允许一条记录）属正常，文件保留；真正的重复
+    #     归档已由 MD5 去重拦截，无需删除文件。
     if not row_id:
-        logger.warning(
-            "%s 记录插入被忽略（消息已存在记录），删除已归档文件", tag,
+        logger.debug(
+            "%s 记录插入被忽略（同消息已存在该类型记录），文件保留", tag,
         )
-        storage_path.unlink(missing_ok=True)
-        return False
 
     logger.warning(
         "%s 保存成功 | %s | %d bytes | %s",
@@ -1005,9 +1001,9 @@ async def _archive_forward_links(
 
     存档位置: {archive_root}/{group_id}/links/{YYYY-MM}/forward_{源消息ID}.md
 
-    只要合集内存在链接或密码类内容，就将合集中的所有文本消息完整
-    存档（网盘链接后面的说明/解压密码等上下文一并保留），并标注每
-    条消息提取出的链接与密码。
+    递归遍历嵌套 forward，只要合集内存在链接或密码类内容，就将所有
+    层级的文本消息完整存档（网盘链接后面的说明/解压密码等上下文一并
+    保留），并标注每条消息提取出的链接与密码。
     """
 
     def _collect_texts(sub: dict) -> str:
@@ -1022,29 +1018,36 @@ async def _archive_forward_links(
                     texts.append(j)
         return "\n".join(texts).strip()
 
-    # 第一遍：判断合集内是否存在链接/密码类内容
-    any_hit = False
-    for sub in content:
-        joined = _collect_texts(sub)
-        if joined and (_extract_links(joined) or _extract_codes(joined)):
-            any_hit = True
-            break
-    if not any_hit:
+    def _collect_all(msgs: list, out: list, depth: int = 0) -> None:
+        """递归收集所有层级的文本消息（含嵌套 forward 内层）"""
+        for sub in msgs:
+            sub_uid = sub.get("user_id", 0) or sub.get("sender", {}).get("user_id", 0) or user_id
+            # 先递归嵌套 forward
+            for s in sub.get("message", []):
+                if s.get("type") == "forward":
+                    inner = s.get("data", {}).get("content") or s.get("data", {}).get("messages")
+                    if isinstance(inner, list):
+                        _collect_all(inner, out, depth + 1)
+            joined = _collect_texts(sub)
+            if joined:
+                out.append((sub_uid, joined, depth))
+
+    collected: list[tuple[int, str, int]] = []
+    _collect_all(content, collected)
+
+    # 第一遍：判断是否存在链接/密码类内容
+    if not any(_extract_links(t) or _extract_codes(t) for _, t, _ in collected):
         return
 
-    # 第二遍：存档合集内所有文本消息
+    # 第二遍：存档所有文本消息
     lines: list[str] = []
-    for i, sub in enumerate(content, 1):
-        sub_uid = sub.get("user_id", 0) or sub.get("sender", {}).get("user_id", 0) or user_id
-        joined = _collect_texts(sub)
-        if not joined:
-            continue
-
+    for i, (sub_uid, joined, depth) in enumerate(collected, 1):
         links = _extract_links(joined)
         codes = _extract_codes(joined)
 
+        prefix = "> " * (depth + 1)
         lines.append(f"## 消息 {i} (用户 {sub_uid})")
-        lines.append("> " + joined.replace("\n", "\n> "))
+        lines.append(prefix + joined.replace("\n", "\n" + prefix))
         if links:
             lines.append("")
             lines.append("链接:")
