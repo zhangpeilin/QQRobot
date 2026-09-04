@@ -1,0 +1,57 @@
+{
+  "stringMsg": {
+    "self_id": 2065277052,
+    "user_id": 512239520,
+    "time": 1788524319,
+    "message_id": 1860081663,
+    "message_seq": 1860081663,
+    "real_id": 1860081663,
+    "real_seq": "879320",
+    "message_type": "group",
+    "sender": {
+      "user_id": 512239520,
+      "nickname": "以为梦想很容易",
+      "card": "",
+      "role": "member"
+    },
+    "raw_message": "[CQ:forward,id=7681653464079354116]",
+    "font": 14,
+    "sub_type": "normal",
+    "message": "[CQ:forward,id=7681653464079354116]",
+    "message_format": "string",
+    "post_type": "message",
+    "group_id": 663964060,
+    "group_name": "我的游戏资源群"
+  },
+  "arrayMsg": {
+    "self_id": 2065277052,
+    "user_id": 512239520,
+    "time": 1788524319,
+    "message_id": 1860081663,
+    "message_seq": 1860081663,
+    "real_id": 1860081663,
+    "real_seq": "879320",
+    "message_type": "group",
+    "sender": {
+      "user_id": 512239520,
+      "nickname": "以为梦想很容易",
+      "card": "",
+      "role": "member"
+    },
+    "raw_message": "[CQ:forward,id=7681653464079354116]",
+    "font": 14,
+    "sub_type": "normal",
+    "message": [
+      {
+        "type": "forward",
+        "data": {
+          "id": "7681653464079354116"
+        }
+      }
+    ],
+    "message_format": "array",
+    "post_type": "message",
+    "group_id": 663964060,
+    "group_name": "我的游戏资源群"
+  }
+}

@@ -1,0 +1,2888 @@
+{
+  "get_msg": {
+    "status": "ok",
+    "retcode": 0,
+    "data": {
+      "self_id": 2065277052,
+      "user_id": 512239520,
+      "time": 1788524319,
+      "message_id": 1860081663,
+      "message_seq": 1860081663,
+      "real_id": 1860081663,
+      "real_seq": "879320",
+      "message_type": "group",
+      "sender": {
+        "user_id": 512239520,
+        "nickname": "以为梦想很容易",
+        "card": "",
+        "role": "member"
+      },
+      "raw_message": "[CQ:forward,id=7681653464079354116,content=&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;]",
+      "font": 14,
+      "sub_type": "normal",
+      "message": [
+        {
+          "type": "forward",
+          "data": {
+            "id": "7681653464079354116",
+            "content": [
+              {
+                "self_id": 2065277052,
+                "user_id": 1094950020,
+                "time": 1788160124,
+                "message_id": 2141188325,
+                "message_seq": 2141188325,
+                "real_id": 2141188325,
+                "real_seq": "1431",
+                "message_type": "private",
+                "sender": {
+                  "user_id": 1094950020,
+                  "nickname": "QQ用户",
+                  "card": ""
+                },
+                "raw_message": "发点适合自己偷偷在被窝看的东西",
+                "font": 14,
+                "sub_type": "friend",
+                "message": [
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": "发点适合自己偷偷在被窝看的东西"
+                    }
+                  }
+                ],
+                "message_format": "array",
+                "post_type": "message"
+              },
+              {
+                "self_id": 2065277052,
+                "user_id": 1094950020,
+                "time": 1788160180,
+                "message_id": 1065168652,
+                "message_seq": 1065168652,
+                "real_id": 1065168652,
+                "real_seq": "1447",
+                "message_type": "private",
+                "sender": {
+                  "user_id": 1094950020,
+                  "nickname": "QQ用户",
+                  "card": ""
+                },
+                "raw_message": "[CQ:forward,id=7681653464079354126,content=&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;]",
+                "font": 14,
+                "sub_type": "friend",
+                "message": [
+                  {
+                    "type": "forward",
+                    "data": {
+                      "id": "7681653464079354126",
+                      "content": [
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160124,
+                          "message_id": 1061731707,
+                          "message_seq": 1061731707,
+                          "real_id": 1061731707,
+                          "real_seq": "1431",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "发点适合自己偷偷在被窝看的东西",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "text",
+                              "data": {
+                                "text": "发点适合自己偷偷在被窝看的东西"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160126,
+                          "message_id": 1319670661,
+                          "message_seq": 1319670661,
+                          "real_id": 1319670661,
+                          "real_seq": "1432",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=847bceaa5385d27184b796256345d9e5.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4,file_size=1643394]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "847bceaa5385d27184b796256345d9e5.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4",
+                                "file_size": "1643394"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160135,
+                          "message_id": 261292310,
+                          "message_seq": 261292310,
+                          "real_id": 261292310,
+                          "real_seq": "1433",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=f5a77b8e71467b6c9d97c24de26b5546.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\f5a77b8e71467b6c9d97c24de26b5546.mp4,file_size=1975045]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "f5a77b8e71467b6c9d97c24de26b5546.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\f5a77b8e71467b6c9d97c24de26b5546.mp4",
+                                "file_size": "1975045"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160135,
+                          "message_id": 1394317147,
+                          "message_seq": 1394317147,
+                          "real_id": 1394317147,
+                          "real_seq": "1434",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=761c42c971d5cdadd70c1039ea1f7918.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\761c42c971d5cdadd70c1039ea1f7918.mp4,file_size=1805579]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "761c42c971d5cdadd70c1039ea1f7918.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\761c42c971d5cdadd70c1039ea1f7918.mp4",
+                                "file_size": "1805579"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160136,
+                          "message_id": 1599424329,
+                          "message_seq": 1599424329,
+                          "real_id": 1599424329,
+                          "real_seq": "1435",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=de01d4e593e8fe92b00d77c3e1b78180.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\de01d4e593e8fe92b00d77c3e1b78180.mp4,file_size=1629561]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "de01d4e593e8fe92b00d77c3e1b78180.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\de01d4e593e8fe92b00d77c3e1b78180.mp4",
+                                "file_size": "1629561"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160145,
+                          "message_id": 1838859687,
+                          "message_seq": 1838859687,
+                          "real_id": 1838859687,
+                          "real_seq": "1436",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=709d59aa68934d6ee6ace74eb2f3a16a.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\709d59aa68934d6ee6ace74eb2f3a16a.mp4,file_size=1567956]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "709d59aa68934d6ee6ace74eb2f3a16a.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\709d59aa68934d6ee6ace74eb2f3a16a.mp4",
+                                "file_size": "1567956"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160145,
+                          "message_id": 1914804941,
+                          "message_seq": 1914804941,
+                          "real_id": 1914804941,
+                          "real_seq": "1437",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=5219bcc9a633c2358e84a888e01d6142.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\5219bcc9a633c2358e84a888e01d6142.mp4,file_size=1491532]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "5219bcc9a633c2358e84a888e01d6142.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\5219bcc9a633c2358e84a888e01d6142.mp4",
+                                "file_size": "1491532"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160145,
+                          "message_id": 147279878,
+                          "message_seq": 147279878,
+                          "real_id": 147279878,
+                          "real_seq": "1438",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=cad074090702c9e81dce18242b408554.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cad074090702c9e81dce18242b408554.mp4,file_size=3223291]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "cad074090702c9e81dce18242b408554.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cad074090702c9e81dce18242b408554.mp4",
+                                "file_size": "3223291"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160146,
+                          "message_id": 330632600,
+                          "message_seq": 330632600,
+                          "real_id": 330632600,
+                          "real_seq": "1439",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=b30bbe2f60986a26d42afbd6212149a9.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\b30bbe2f60986a26d42afbd6212149a9.mp4,file_size=2918854]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "b30bbe2f60986a26d42afbd6212149a9.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\b30bbe2f60986a26d42afbd6212149a9.mp4",
+                                "file_size": "2918854"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160146,
+                          "message_id": 1268345572,
+                          "message_seq": 1268345572,
+                          "real_id": 1268345572,
+                          "real_seq": "1440",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=cb3cfc9f3b227580280aba7f0f6eada3.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cb3cfc9f3b227580280aba7f0f6eada3.mp4,file_size=1856579]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "cb3cfc9f3b227580280aba7f0f6eada3.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cb3cfc9f3b227580280aba7f0f6eada3.mp4",
+                                "file_size": "1856579"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160146,
+                          "message_id": 285045102,
+                          "message_seq": 285045102,
+                          "real_id": 285045102,
+                          "real_seq": "1441",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=4087b7daa499e8b8cebb31bc3d22b77c.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\4087b7daa499e8b8cebb31bc3d22b77c.mp4,file_size=2028615]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "4087b7daa499e8b8cebb31bc3d22b77c.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\4087b7daa499e8b8cebb31bc3d22b77c.mp4",
+                                "file_size": "2028615"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160147,
+                          "message_id": 384953708,
+                          "message_seq": 384953708,
+                          "real_id": 384953708,
+                          "real_seq": "1442",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:video,file=0422608d0cc1d1780b554ecf4c27ce4b.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\0422608d0cc1d1780b554ecf4c27ce4b.mp4,file_size=4418612]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "video",
+                              "data": {
+                                "file": "0422608d0cc1d1780b554ecf4c27ce4b.mp4",
+                                "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\0422608d0cc1d1780b554ecf4c27ce4b.mp4",
+                                "file_size": "4418612"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160154,
+                          "message_id": 1460245564,
+                          "message_seq": 1460245564,
+                          "real_id": 1460245564,
+                          "real_seq": "1443",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "text",
+                              "data": {
+                                "text": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160155,
+                          "message_id": 1189286569,
+                          "message_seq": 1189286569,
+                          "real_id": 1189286569,
+                          "real_seq": "1444",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "备用↓",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "text",
+                              "data": {
+                                "text": "备用↓"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160155,
+                          "message_id": 68392205,
+                          "message_seq": 68392205,
+                          "real_id": 68392205,
+                          "real_seq": "1445",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:json,data={\"app\":\"com.tencent.troopsharecard\"&#44;\"desc\":\"\"&#44;\"view\":\"contact\"&#44;\"bizsrc\":\"\"&#44;\"ver\":\"1.0.0.30\"&#44;\"prompt\":\"群名片: 王者荣耀组队\"&#44;\"appID\":\"\"&#44;\"sourceName\":\"\"&#44;\"actionData\":\"\"&#44;\"actionData_A\":\"\"&#44;\"sourceUrl\":\"\"&#44;\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"&#44;\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\"&#44;\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&amp;k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&amp;authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&amp;noverify=0&amp;group_code=626933704\"&#44;\"nickname\":\"王者荣耀组队\"&#44;\"tag\":\"群名片\"&#44;\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}}&#44;\"config\":{\"ctime\":1785572595&#44;\"token\":\"179a2687ae7242a9538631936e2fb9bc\"}&#44;\"text\":\"\"&#44;\"extraApps\":&#91;&#93;&#44;\"sourceAd\":\"\"&#44;\"extra\":\"\"}]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "json",
+                              "data": {
+                                "data": "{\"app\":\"com.tencent.troopsharecard\",\"desc\":\"\",\"view\":\"contact\",\"bizsrc\":\"\",\"ver\":\"1.0.0.30\",\"prompt\":\"群名片: 王者荣耀组队\",\"appID\":\"\",\"sourceName\":\"\",\"actionData\":\"\",\"actionData_A\":\"\",\"sourceUrl\":\"\",\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\",\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\",\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&noverify=0&group_code=626933704\",\"nickname\":\"王者荣耀组队\",\"tag\":\"群名片\",\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}},\"config\":{\"ctime\":1785572595,\"token\":\"179a2687ae7242a9538631936e2fb9bc\"},\"text\":\"\",\"extraApps\":[],\"sourceAd\":\"\",\"extra\":\"\"}"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "message_format": "array",
+                "post_type": "message"
+              },
+              {
+                "self_id": 2065277052,
+                "user_id": 1094950020,
+                "time": 1788160314,
+                "message_id": 94321902,
+                "message_seq": 94321902,
+                "real_id": 94321902,
+                "real_seq": "1475",
+                "message_type": "private",
+                "sender": {
+                  "user_id": 1094950020,
+                  "nickname": "QQ用户",
+                  "card": ""
+                },
+                "raw_message": "[CQ:forward,id=7681653464079354131,content=&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;]",
+                "font": 14,
+                "sub_type": "friend",
+                "message": [
+                  {
+                    "type": "forward",
+                    "data": {
+                      "id": "7681653464079354131",
+                      "content": [
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160193,
+                          "message_id": 2111480972,
+                          "message_seq": 2111480972,
+                          "real_id": 2111480972,
+                          "real_seq": "1448",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=0A39767498B88B615FFF029E930D5715.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQS6Ku2AjViXkKgbmi636pY56Q7yxi05Q0g_woox-iDpPTUlgMyBHByb2RQgL2jAVoQsF2ruFqn_p7cJY0AN-6EGXoCnO6CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=225972]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "0A39767498B88B615FFF029E930D5715.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQS6Ku2AjViXkKgbmi636pY56Q7yxi05Q0g_woox-iDpPTUlgMyBHByb2RQgL2jAVoQsF2ruFqn_p7cJY0AN-6EGXoCnO6CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "225972"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160195,
+                          "message_id": 2147003259,
+                          "message_seq": 2147003259,
+                          "real_id": 2147003259,
+                          "real_seq": "1449",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=8CFFFE41AFAF4F90B11B0E4F173C6A90.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSVNiPn-JyiByJysT90Ka3r_33YVBjLyAgg_wooyrqVpPTUlgMyBHByb2RQgL2jAVoQIuQnkZwIM4ztLbkVCQimoHoCQtmCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=140363]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "8CFFFE41AFAF4F90B11B0E4F173C6A90.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSVNiPn-JyiByJysT90Ka3r_33YVBjLyAgg_wooyrqVpPTUlgMyBHByb2RQgL2jAVoQIuQnkZwIM4ztLbkVCQimoHoCQtmCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "140363"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160202,
+                          "message_id": 2109117746,
+                          "message_seq": 2109117746,
+                          "real_id": 2109117746,
+                          "real_seq": "1450",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=D747FE58FBA87A568F9C6DCB47012D4A.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTWM9NTwh2IkzFDonil4N8O4aPtgBirgRcg_woo0bixpPTUlgMyBHByb2RQgL2jAVoQk-bGxljtmbaLq13v05QFxXoCbcSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=377003]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "D747FE58FBA87A568F9C6DCB47012D4A.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTWM9NTwh2IkzFDonil4N8O4aPtgBirgRcg_woo0bixpPTUlgMyBHByb2RQgL2jAVoQk-bGxljtmbaLq13v05QFxXoCbcSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "377003"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160204,
+                          "message_id": 960464888,
+                          "message_seq": 960464888,
+                          "real_id": 960464888,
+                          "real_seq": "1451",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=1C4095FAFC41580EE5628BB85F74F84D.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ-gFPrL-XS11HpobrrxZDMsDdP6hi10wwg_woo29aRpPTUlgMyBHByb2RQgL2jAVoQhWgrXWzVyRbQlhZuoLx9v3oCnD-CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=207285]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "1C4095FAFC41580EE5628BB85F74F84D.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ-gFPrL-XS11HpobrrxZDMsDdP6hi10wwg_woo29aRpPTUlgMyBHByb2RQgL2jAVoQhWgrXWzVyRbQlhZuoLx9v3oCnD-CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "207285"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160207,
+                          "message_id": 1858571081,
+                          "message_seq": 1858571081,
+                          "real_id": 1858571081,
+                          "real_seq": "1452",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=0C069ED7D50B1BD83AE2D6E43C05E3DF.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQVDB6rjQ4V6RWBZxFHytyb3__ioBiiog8g_woo4IOEpPTUlgMyBHByb2RQgL2jAVoQ06rR-7TWffaw4FhqBKRaqHoCO-SCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=250146]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "0C069ED7D50B1BD83AE2D6E43C05E3DF.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQVDB6rjQ4V6RWBZxFHytyb3__ioBiiog8g_woo4IOEpPTUlgMyBHByb2RQgL2jAVoQ06rR-7TWffaw4FhqBKRaqHoCO-SCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "250146"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160209,
+                          "message_id": 1558349049,
+                          "message_seq": 1558349049,
+                          "real_id": 1558349049,
+                          "real_seq": "1453",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=FD004300E55BBD7BFD9CBB30D31978A1.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ2jNUV3VPC44jVNAuLg85g9QJxDRiU3BIg_woomuuhpPTUlgMyBHByb2RQgL2jAVoQwz8VmucXpI-G59S6H7Ty3HoC8weCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=306708]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "FD004300E55BBD7BFD9CBB30D31978A1.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ2jNUV3VPC44jVNAuLg85g9QJxDRiU3BIg_woomuuhpPTUlgMyBHByb2RQgL2jAVoQwz8VmucXpI-G59S6H7Ty3HoC8weCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "306708"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160212,
+                          "message_id": 1379308170,
+                          "message_seq": 1379308170,
+                          "real_id": 1379308170,
+                          "real_seq": "1454",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=CA692E24ED7D907C1964A7D162ADC580.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ_ckAyfhqoIcK5ekw_X8RWH5iryBjcnw8g_wooltqlpPTUlgMyBHByb2RQgL2jAVoQ00b89Z7Ezj_Qn7IKtWeO1HoCBNWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=249820]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "CA692E24ED7D907C1964A7D162ADC580.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ_ckAyfhqoIcK5ekw_X8RWH5iryBjcnw8g_wooltqlpPTUlgMyBHByb2RQgL2jAVoQ00b89Z7Ezj_Qn7IKtWeO1HoCBNWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "249820"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160216,
+                          "message_id": 2019601115,
+                          "message_seq": 2019601115,
+                          "real_id": 2019601115,
+                          "real_seq": "1455",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=6777F5A58D165A8C390B41A16684EE9F.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRDvePqKqkotBkACzhEpbzW9PQjyhjqmxAg_wooqdW3pPTUlgMyBHByb2RQgL2jAVoQ6Ud4cZjiG6yvqiweqJrymHoC7NGCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=265706]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "6777F5A58D165A8C390B41A16684EE9F.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRDvePqKqkotBkACzhEpbzW9PQjyhjqmxAg_wooqdW3pPTUlgMyBHByb2RQgL2jAVoQ6Ud4cZjiG6yvqiweqJrymHoC7NGCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "265706"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160219,
+                          "message_id": 1366491028,
+                          "message_seq": 1366491028,
+                          "real_id": 1366491028,
+                          "real_seq": "1456",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=0C4B98E382FDA6F8AB0567518A516777.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTwl4uFqNMIWYuz_CppJZRK3EZzphjq0wYg_woo0_bRpPTUlgMyBHByb2RQgL2jAVoQ2pHljilGAd9ZwokzMXiozXoCOWSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=109034]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "0C4B98E382FDA6F8AB0567518A516777.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTwl4uFqNMIWYuz_CppJZRK3EZzphjq0wYg_woo0_bRpPTUlgMyBHByb2RQgL2jAVoQ2pHljilGAd9ZwokzMXiozXoCOWSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "109034"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160222,
+                          "message_id": 352169388,
+                          "message_seq": 352169388,
+                          "real_id": 352169388,
+                          "real_seq": "1457",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=81960E443EDF8C25D96372C9238023DD.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTmzJnX0C1NExW2ABJMov7L2OWmARi6-Acg_woo24HxpPTUlgMyBHByb2RQgL2jAVoQ-MNr_HHI7U6d6Yif_flkcXoCDsuCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=130106]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "81960E443EDF8C25D96372C9238023DD.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTmzJnX0C1NExW2ABJMov7L2OWmARi6-Acg_woo24HxpPTUlgMyBHByb2RQgL2jAVoQ-MNr_HHI7U6d6Yif_flkcXoCDsuCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "130106"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160225,
+                          "message_id": 1212561557,
+                          "message_seq": 1212561557,
+                          "real_id": 1212561557,
+                          "real_seq": "1458",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=1BB22456DDF625193FE129BB6913CE46.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRj6rjQc-mRS6XX2NliEJS9Nt5UwBi2rwog_woopo_CpPTUlgMyBHByb2RQgL2jAVoQ7f6uqJISt0JsN40NW8IWD3oC76eCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=169910]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "1BB22456DDF625193FE129BB6913CE46.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRj6rjQc-mRS6XX2NliEJS9Nt5UwBi2rwog_woopo_CpPTUlgMyBHByb2RQgL2jAVoQ7f6uqJISt0JsN40NW8IWD3oC76eCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "169910"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160228,
+                          "message_id": 1297716213,
+                          "message_seq": 1297716213,
+                          "real_id": 1297716213,
+                          "real_seq": "1459",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=E54B1CAD936CEFAAAD52E12624D4B804.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQjB3c-pKUbh4rdxHkJdBXdr9hBKxj0jRMg_woo4o7ZpPTUlgMyBHByb2RQgL2jAVoQQda1RsKEalVCUl7pt9DdRHoCtuKCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=313076]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "E54B1CAD936CEFAAAD52E12624D4B804.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQjB3c-pKUbh4rdxHkJdBXdr9hBKxj0jRMg_woo4o7ZpPTUlgMyBHByb2RQgL2jAVoQQda1RsKEalVCUl7pt9DdRHoCtuKCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "313076"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160232,
+                          "message_id": 1843076265,
+                          "message_seq": 1843076265,
+                          "real_id": 1843076265,
+                          "real_seq": "1460",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=594F0851B32270DACF732B3E10AFCA2A.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTQX52XFqWu8qcluc5FSfuVRaj2cxjuvBUg_wookb6BpfTUlgMyBHByb2RQgL2jAVoQgho-1QLYXMcmWX1Rg1Gj_noCYIWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=351854]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "594F0851B32270DACF732B3E10AFCA2A.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTQX52XFqWu8qcluc5FSfuVRaj2cxjuvBUg_wookb6BpfTUlgMyBHByb2RQgL2jAVoQgho-1QLYXMcmWX1Rg1Gj_noCYIWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "351854"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160235,
+                          "message_id": 1772559035,
+                          "message_seq": 1772559035,
+                          "real_id": 1772559035,
+                          "real_seq": "1461",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=66A629E69090B02A3FABB2F80D9A1B57.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRM3CMX8ZlS78Y5_p9XHAESjGSguhip2gwg_wooydDJpPTUlgMyBHByb2RQgL2jAVoQ8l5kDgRBEAwQhNReQwUacHoC9ZyCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=208169]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "66A629E69090B02A3FABB2F80D9A1B57.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRM3CMX8ZlS78Y5_p9XHAESjGSguhip2gwg_wooydDJpPTUlgMyBHByb2RQgL2jAVoQ8l5kDgRBEAwQhNReQwUacHoC9ZyCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "208169"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160238,
+                          "message_id": 1122605650,
+                          "message_seq": 1122605650,
+                          "real_id": 1122605650,
+                          "real_seq": "1462",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=AEA2392F2C07FA9599EE311AA12B5FA8.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTr_nW98RDhvSWF-hTdVh_4tEZPhhjqnBMg_woo9svppPTUlgMyBHByb2RQgL2jAVoQuUcZiCZaKK55PkvNOhTOqnoC236CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=314986]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "AEA2392F2C07FA9599EE311AA12B5FA8.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTr_nW98RDhvSWF-hTdVh_4tEZPhhjqnBMg_woo9svppPTUlgMyBHByb2RQgL2jAVoQuUcZiCZaKK55PkvNOhTOqnoC236CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "314986"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160242,
+                          "message_id": 998690940,
+                          "message_seq": 998690940,
+                          "real_id": 998690940,
+                          "real_seq": "1463",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=AA6857D85E1AD136908E3F48BAF3CFDE.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQLN5B19toB3tXy8A6S0zIw0Y3HfRiJkxYg_woovLDipPTUlgMyBHByb2RQgL2jAVoQEJIoAnpA8mz32kOXMNHBSXoC4EWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=362889]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "AA6857D85E1AD136908E3F48BAF3CFDE.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQLN5B19toB3tXy8A6S0zIw0Y3HfRiJkxYg_woovLDipPTUlgMyBHByb2RQgL2jAVoQEJIoAnpA8mz32kOXMNHBSXoC4EWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "362889"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160245,
+                          "message_id": 10522754,
+                          "message_seq": 10522754,
+                          "real_id": 10522754,
+                          "real_seq": "1464",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=A73A0F7787C9025E43A70FDA4AEDC6D1.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhS6Zso2U8VFFaYoi2bAfOcAStn0lBiOyxAg_woolO35pPTUlgMyBHByb2RQgL2jAVoQEYxaWB_kweFoZPy8RFw3NXoCUqSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=271758]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "A73A0F7787C9025E43A70FDA4AEDC6D1.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS6Zso2U8VFFaYoi2bAfOcAStn0lBiOyxAg_woolO35pPTUlgMyBHByb2RQgL2jAVoQEYxaWB_kweFoZPy8RFw3NXoCUqSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "271758"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160247,
+                          "message_id": 1526939858,
+                          "message_seq": 1526939858,
+                          "real_id": 1526939858,
+                          "real_seq": "1465",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=87F835F91BBC7DC14D7F4E4B889DDF37.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSVT90iNHXN2gOXKYPszwlhcwSJbBiaxg4g_woo1JaIpfTUlgMyBHByb2RQgL2jAVoQlg5arPz3Le8mEHVLZyQTo3oCqtOCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=238362]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "87F835F91BBC7DC14D7F4E4B889DDF37.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSVT90iNHXN2gOXKYPszwlhcwSJbBiaxg4g_woo1JaIpfTUlgMyBHByb2RQgL2jAVoQlg5arPz3Le8mEHVLZyQTo3oCqtOCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "238362"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160252,
+                          "message_id": 360311957,
+                          "message_seq": 360311957,
+                          "real_id": 360311957,
+                          "real_seq": "1466",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=7CD8E2507136EE807F417A6F3AC4B8C2.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTOKg-P3s3Op_Gtr0-91CayQnWt2BjL-BIg_wookpuRpfTUlgMyBHByb2RQgL2jAVoQfXBNnJ2iYoAwymoEIFyu3HoCYSSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=310347]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "7CD8E2507136EE807F417A6F3AC4B8C2.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTOKg-P3s3Op_Gtr0-91CayQnWt2BjL-BIg_wookpuRpfTUlgMyBHByb2RQgL2jAVoQfXBNnJ2iYoAwymoEIFyu3HoCYSSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "310347"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160255,
+                          "message_id": 1339577224,
+                          "message_seq": 1339577224,
+                          "real_id": 1339577224,
+                          "real_seq": "1467",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=220765C8E5601303C2A34B0CFA5A1BC7.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhS2qpe99s7U7J-P7yf30SdncFZsKRjqoRIg_woonoCXpfTUlgMyBHByb2RQgL2jAVoQ_BXqErJuRJTMWi2zDmMjX3oCDxiCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=299242]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "220765C8E5601303C2A34B0CFA5A1BC7.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS2qpe99s7U7J-P7yf30SdncFZsKRjqoRIg_woonoCXpfTUlgMyBHByb2RQgL2jAVoQ_BXqErJuRJTMWi2zDmMjX3oCDxiCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "299242"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160259,
+                          "message_id": 411398123,
+                          "message_seq": 411398123,
+                          "real_id": 411398123,
+                          "real_seq": "1468",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=2F21E1757735A85FD16A8A5381773B21.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQkB9GkpEmeug5lJ-FfKrj8o1mhVhij4yYg_woo04SjpfTUlgMyBHByb2RQgL2jAVoQt6zNUDqVAsaKbXppsnnEJXoCT8-CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=635299]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "2F21E1757735A85FD16A8A5381773B21.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQkB9GkpEmeug5lJ-FfKrj8o1mhVhij4yYg_woo04SjpfTUlgMyBHByb2RQgL2jAVoQt6zNUDqVAsaKbXppsnnEJXoCT8-CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "635299"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160265,
+                          "message_id": 1254281878,
+                          "message_seq": 1254281878,
+                          "real_id": 1254281878,
+                          "real_seq": "1469",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=1D9805BD076B86F566656AE42B12517E.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRlOoFENCEN-N5wNQdZB-M7BoQdExjxhgwg_woo9bWmpfTUlgMyBHByb2RQgL2jAVoQ5LRfW7EWHGT6S3XhoLReI3oCKuGCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=197489]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "1D9805BD076B86F566656AE42B12517E.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRlOoFENCEN-N5wNQdZB-M7BoQdExjxhgwg_woo9bWmpfTUlgMyBHByb2RQgL2jAVoQ5LRfW7EWHGT6S3XhoLReI3oCKuGCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "197489"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160267,
+                          "message_id": 245137762,
+                          "message_seq": 245137762,
+                          "real_id": 245137762,
+                          "real_seq": "1470",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:image,file=4D92C90EF19B73CF91C5CA5333FBF83D.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSib-GXYardbHOifk-86iqa20ZHgBiyzg0g_wooxq-ypfTUlgMyBHByb2RQgL2jAVoQmotyoONLAT3u0-Vpn2NKe3oCPi2CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=223026]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "image",
+                              "data": {
+                                "summary": "",
+                                "file": "4D92C90EF19B73CF91C5CA5333FBF83D.jpg",
+                                "sub_type": 0,
+                                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSib-GXYardbHOifk-86iqa20ZHgBiyzg0g_wooxq-ypfTUlgMyBHByb2RQgL2jAVoQmotyoONLAT3u0-Vpn2NKe3oCPi2CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                                "file_size": "223026"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160277,
+                          "message_id": 178620170,
+                          "message_seq": 178620170,
+                          "real_id": 178620170,
+                          "real_seq": "1471",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "text",
+                              "data": {
+                                "text": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160277,
+                          "message_id": 672464562,
+                          "message_seq": 672464562,
+                          "real_id": 672464562,
+                          "real_seq": "1472",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "备用↓",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "text",
+                              "data": {
+                                "text": "备用↓"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        },
+                        {
+                          "self_id": 2065277052,
+                          "user_id": 1094950020,
+                          "time": 1788160278,
+                          "message_id": 220136735,
+                          "message_seq": 220136735,
+                          "real_id": 220136735,
+                          "real_seq": "1473",
+                          "message_type": "private",
+                          "sender": {
+                            "user_id": 1094950020,
+                            "nickname": "QQ用户",
+                            "card": ""
+                          },
+                          "raw_message": "[CQ:json,data={\"app\":\"com.tencent.troopsharecard\"&#44;\"desc\":\"\"&#44;\"view\":\"contact\"&#44;\"bizsrc\":\"\"&#44;\"ver\":\"1.0.0.30\"&#44;\"prompt\":\"群名片: 王者荣耀组队\"&#44;\"appID\":\"\"&#44;\"sourceName\":\"\"&#44;\"actionData\":\"\"&#44;\"actionData_A\":\"\"&#44;\"sourceUrl\":\"\"&#44;\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"&#44;\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\"&#44;\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&amp;k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&amp;authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&amp;noverify=0&amp;group_code=626933704\"&#44;\"nickname\":\"王者荣耀组队\"&#44;\"tag\":\"群名片\"&#44;\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}}&#44;\"config\":{\"ctime\":1785572595&#44;\"token\":\"179a2687ae7242a9538631936e2fb9bc\"}&#44;\"text\":\"\"&#44;\"extraApps\":&#91;&#93;&#44;\"sourceAd\":\"\"&#44;\"extra\":\"\"}]",
+                          "font": 14,
+                          "sub_type": "friend",
+                          "message": [
+                            {
+                              "type": "json",
+                              "data": {
+                                "data": "{\"app\":\"com.tencent.troopsharecard\",\"desc\":\"\",\"view\":\"contact\",\"bizsrc\":\"\",\"ver\":\"1.0.0.30\",\"prompt\":\"群名片: 王者荣耀组队\",\"appID\":\"\",\"sourceName\":\"\",\"actionData\":\"\",\"actionData_A\":\"\",\"sourceUrl\":\"\",\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\",\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\",\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&noverify=0&group_code=626933704\",\"nickname\":\"王者荣耀组队\",\"tag\":\"群名片\",\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}},\"config\":{\"ctime\":1785572595,\"token\":\"179a2687ae7242a9538631936e2fb9bc\"},\"text\":\"\",\"extraApps\":[],\"sourceAd\":\"\",\"extra\":\"\"}"
+                              }
+                            }
+                          ],
+                          "message_format": "array",
+                          "post_type": "message"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "message_format": "array",
+                "post_type": "message"
+              },
+              {
+                "self_id": 2065277052,
+                "user_id": 1094950020,
+                "time": 1788160320,
+                "message_id": 323237254,
+                "message_seq": 323237254,
+                "real_id": 323237254,
+                "real_seq": "1476",
+                "message_type": "private",
+                "sender": {
+                  "user_id": 1094950020,
+                  "nickname": "QQ用户",
+                  "card": ""
+                },
+                "raw_message": "喜欢😋",
+                "font": 14,
+                "sub_type": "friend",
+                "message": [
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": "喜欢"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "data": {
+                      "text": "😋"
+                    }
+                  }
+                ],
+                "message_format": "array",
+                "post_type": "message"
+              },
+              {
+                "self_id": 2065277052,
+                "user_id": 1094950020,
+                "time": 1788160323,
+                "message_id": 402528085,
+                "message_seq": 402528085,
+                "real_id": 402528085,
+                "real_seq": "1477",
+                "message_type": "private",
+                "sender": {
+                  "user_id": 1094950020,
+                  "nickname": "QQ用户",
+                  "card": ""
+                },
+                "raw_message": "[CQ:image,summary=&#91;动画表情&#93;,file=78C0E861839F265DC969D07129D144CD.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTGj7D0nuprrsALEfMKNRUmatzPDRiv9Acg_woozce1pfTUlgMyBHByb2RQgL2jAVoQS_XSr5AwLOC8-W8897pEVXoCBSSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=129583]",
+                "font": 14,
+                "sub_type": "friend",
+                "message": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "summary": "[动画表情]",
+                      "file": "78C0E861839F265DC969D07129D144CD.jpg",
+                      "sub_type": 1,
+                      "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTGj7D0nuprrsALEfMKNRUmatzPDRiv9Acg_woozce1pfTUlgMyBHByb2RQgL2jAVoQS_XSr5AwLOC8-W8897pEVXoCBSSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                      "file_size": "129583"
+                    }
+                  }
+                ],
+                "message_format": "array",
+                "post_type": "message"
+              }
+            ]
+          }
+        }
+      ],
+      "message_format": "array",
+      "post_type": "message",
+      "group_id": 663964060,
+      "group_name": "我的游戏资源群",
+      "emoji_likes_list": []
+    },
+    "message": "",
+    "wording": "",
+    "echo": "dump-0",
+    "stream": "normal-action"
+  },
+  "get_forward_msg": {
+    "status": "ok",
+    "retcode": 0,
+    "data": {
+      "messages": [
+        {
+          "self_id": 2065277052,
+          "user_id": 1094950020,
+          "time": 1788160124,
+          "message_id": 2141188325,
+          "message_seq": 2141188325,
+          "real_id": 2141188325,
+          "real_seq": "1431",
+          "message_type": "private",
+          "sender": {
+            "user_id": 1094950020,
+            "nickname": "QQ用户",
+            "card": ""
+          },
+          "raw_message": "发点适合自己偷偷在被窝看的东西",
+          "font": 14,
+          "sub_type": "friend",
+          "message": [
+            {
+              "type": "text",
+              "data": {
+                "text": "发点适合自己偷偷在被窝看的东西"
+              }
+            }
+          ],
+          "message_format": "array",
+          "post_type": "message"
+        },
+        {
+          "self_id": 2065277052,
+          "user_id": 1094950020,
+          "time": 1788160180,
+          "message_id": 1065168652,
+          "message_seq": 1065168652,
+          "real_id": 1065168652,
+          "real_seq": "1447",
+          "message_type": "private",
+          "sender": {
+            "user_id": 1094950020,
+            "nickname": "QQ用户",
+            "card": ""
+          },
+          "raw_message": "[CQ:forward,id=7681653464079354126,content=&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;]",
+          "font": 14,
+          "sub_type": "friend",
+          "message": [
+            {
+              "type": "forward",
+              "data": {
+                "id": "7681653464079354126",
+                "content": [
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160124,
+                    "message_id": 1061731707,
+                    "message_seq": 1061731707,
+                    "real_id": 1061731707,
+                    "real_seq": "1431",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "发点适合自己偷偷在被窝看的东西",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": "发点适合自己偷偷在被窝看的东西"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160126,
+                    "message_id": 1319670661,
+                    "message_seq": 1319670661,
+                    "real_id": 1319670661,
+                    "real_seq": "1432",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=847bceaa5385d27184b796256345d9e5.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4,file_size=1643394]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "847bceaa5385d27184b796256345d9e5.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4",
+                          "file_size": "1643394"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160135,
+                    "message_id": 261292310,
+                    "message_seq": 261292310,
+                    "real_id": 261292310,
+                    "real_seq": "1433",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=f5a77b8e71467b6c9d97c24de26b5546.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\f5a77b8e71467b6c9d97c24de26b5546.mp4,file_size=1975045]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "f5a77b8e71467b6c9d97c24de26b5546.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\f5a77b8e71467b6c9d97c24de26b5546.mp4",
+                          "file_size": "1975045"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160135,
+                    "message_id": 1394317147,
+                    "message_seq": 1394317147,
+                    "real_id": 1394317147,
+                    "real_seq": "1434",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=761c42c971d5cdadd70c1039ea1f7918.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\761c42c971d5cdadd70c1039ea1f7918.mp4,file_size=1805579]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "761c42c971d5cdadd70c1039ea1f7918.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\761c42c971d5cdadd70c1039ea1f7918.mp4",
+                          "file_size": "1805579"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160136,
+                    "message_id": 1599424329,
+                    "message_seq": 1599424329,
+                    "real_id": 1599424329,
+                    "real_seq": "1435",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=de01d4e593e8fe92b00d77c3e1b78180.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\de01d4e593e8fe92b00d77c3e1b78180.mp4,file_size=1629561]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "de01d4e593e8fe92b00d77c3e1b78180.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\de01d4e593e8fe92b00d77c3e1b78180.mp4",
+                          "file_size": "1629561"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160145,
+                    "message_id": 1838859687,
+                    "message_seq": 1838859687,
+                    "real_id": 1838859687,
+                    "real_seq": "1436",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=709d59aa68934d6ee6ace74eb2f3a16a.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\709d59aa68934d6ee6ace74eb2f3a16a.mp4,file_size=1567956]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "709d59aa68934d6ee6ace74eb2f3a16a.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\709d59aa68934d6ee6ace74eb2f3a16a.mp4",
+                          "file_size": "1567956"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160145,
+                    "message_id": 1914804941,
+                    "message_seq": 1914804941,
+                    "real_id": 1914804941,
+                    "real_seq": "1437",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=5219bcc9a633c2358e84a888e01d6142.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\5219bcc9a633c2358e84a888e01d6142.mp4,file_size=1491532]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "5219bcc9a633c2358e84a888e01d6142.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\5219bcc9a633c2358e84a888e01d6142.mp4",
+                          "file_size": "1491532"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160145,
+                    "message_id": 147279878,
+                    "message_seq": 147279878,
+                    "real_id": 147279878,
+                    "real_seq": "1438",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=cad074090702c9e81dce18242b408554.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cad074090702c9e81dce18242b408554.mp4,file_size=3223291]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "cad074090702c9e81dce18242b408554.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cad074090702c9e81dce18242b408554.mp4",
+                          "file_size": "3223291"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160146,
+                    "message_id": 330632600,
+                    "message_seq": 330632600,
+                    "real_id": 330632600,
+                    "real_seq": "1439",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=b30bbe2f60986a26d42afbd6212149a9.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\b30bbe2f60986a26d42afbd6212149a9.mp4,file_size=2918854]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "b30bbe2f60986a26d42afbd6212149a9.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\b30bbe2f60986a26d42afbd6212149a9.mp4",
+                          "file_size": "2918854"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160146,
+                    "message_id": 1268345572,
+                    "message_seq": 1268345572,
+                    "real_id": 1268345572,
+                    "real_seq": "1440",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=cb3cfc9f3b227580280aba7f0f6eada3.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cb3cfc9f3b227580280aba7f0f6eada3.mp4,file_size=1856579]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "cb3cfc9f3b227580280aba7f0f6eada3.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\cb3cfc9f3b227580280aba7f0f6eada3.mp4",
+                          "file_size": "1856579"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160146,
+                    "message_id": 285045102,
+                    "message_seq": 285045102,
+                    "real_id": 285045102,
+                    "real_seq": "1441",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=4087b7daa499e8b8cebb31bc3d22b77c.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\4087b7daa499e8b8cebb31bc3d22b77c.mp4,file_size=2028615]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "4087b7daa499e8b8cebb31bc3d22b77c.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\4087b7daa499e8b8cebb31bc3d22b77c.mp4",
+                          "file_size": "2028615"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160147,
+                    "message_id": 384953708,
+                    "message_seq": 384953708,
+                    "real_id": 384953708,
+                    "real_seq": "1442",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:video,file=0422608d0cc1d1780b554ecf4c27ce4b.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\0422608d0cc1d1780b554ecf4c27ce4b.mp4,file_size=4418612]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "video",
+                        "data": {
+                          "file": "0422608d0cc1d1780b554ecf4c27ce4b.mp4",
+                          "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\0422608d0cc1d1780b554ecf4c27ce4b.mp4",
+                          "file_size": "4418612"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160154,
+                    "message_id": 1460245564,
+                    "message_seq": 1460245564,
+                    "real_id": 1460245564,
+                    "real_seq": "1443",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160155,
+                    "message_id": 1189286569,
+                    "message_seq": 1189286569,
+                    "real_id": 1189286569,
+                    "real_seq": "1444",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "备用↓",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": "备用↓"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160155,
+                    "message_id": 68392205,
+                    "message_seq": 68392205,
+                    "real_id": 68392205,
+                    "real_seq": "1445",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:json,data={\"app\":\"com.tencent.troopsharecard\"&#44;\"desc\":\"\"&#44;\"view\":\"contact\"&#44;\"bizsrc\":\"\"&#44;\"ver\":\"1.0.0.30\"&#44;\"prompt\":\"群名片: 王者荣耀组队\"&#44;\"appID\":\"\"&#44;\"sourceName\":\"\"&#44;\"actionData\":\"\"&#44;\"actionData_A\":\"\"&#44;\"sourceUrl\":\"\"&#44;\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"&#44;\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\"&#44;\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&amp;k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&amp;authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&amp;noverify=0&amp;group_code=626933704\"&#44;\"nickname\":\"王者荣耀组队\"&#44;\"tag\":\"群名片\"&#44;\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}}&#44;\"config\":{\"ctime\":1785572595&#44;\"token\":\"179a2687ae7242a9538631936e2fb9bc\"}&#44;\"text\":\"\"&#44;\"extraApps\":&#91;&#93;&#44;\"sourceAd\":\"\"&#44;\"extra\":\"\"}]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "json",
+                        "data": {
+                          "data": "{\"app\":\"com.tencent.troopsharecard\",\"desc\":\"\",\"view\":\"contact\",\"bizsrc\":\"\",\"ver\":\"1.0.0.30\",\"prompt\":\"群名片: 王者荣耀组队\",\"appID\":\"\",\"sourceName\":\"\",\"actionData\":\"\",\"actionData_A\":\"\",\"sourceUrl\":\"\",\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\",\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\",\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&noverify=0&group_code=626933704\",\"nickname\":\"王者荣耀组队\",\"tag\":\"群名片\",\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}},\"config\":{\"ctime\":1785572595,\"token\":\"179a2687ae7242a9538631936e2fb9bc\"},\"text\":\"\",\"extraApps\":[],\"sourceAd\":\"\",\"extra\":\"\"}"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  }
+                ]
+              }
+            }
+          ],
+          "message_format": "array",
+          "post_type": "message"
+        },
+        {
+          "self_id": 2065277052,
+          "user_id": 1094950020,
+          "time": 1788160314,
+          "message_id": 94321902,
+          "message_seq": 94321902,
+          "real_id": 94321902,
+          "real_seq": "1475",
+          "message_type": "private",
+          "sender": {
+            "user_id": 1094950020,
+            "nickname": "QQ用户",
+            "card": ""
+          },
+          "raw_message": "[CQ:forward,id=7681653464079354131,content=&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;&#44;&#91;object Object&#93;]",
+          "font": 14,
+          "sub_type": "friend",
+          "message": [
+            {
+              "type": "forward",
+              "data": {
+                "id": "7681653464079354131",
+                "content": [
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160193,
+                    "message_id": 2111480972,
+                    "message_seq": 2111480972,
+                    "real_id": 2111480972,
+                    "real_seq": "1448",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=0A39767498B88B615FFF029E930D5715.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQS6Ku2AjViXkKgbmi636pY56Q7yxi05Q0g_woox-iDpPTUlgMyBHByb2RQgL2jAVoQsF2ruFqn_p7cJY0AN-6EGXoCnO6CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=225972]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "0A39767498B88B615FFF029E930D5715.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQS6Ku2AjViXkKgbmi636pY56Q7yxi05Q0g_woox-iDpPTUlgMyBHByb2RQgL2jAVoQsF2ruFqn_p7cJY0AN-6EGXoCnO6CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "225972"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160195,
+                    "message_id": 2147003259,
+                    "message_seq": 2147003259,
+                    "real_id": 2147003259,
+                    "real_seq": "1449",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=8CFFFE41AFAF4F90B11B0E4F173C6A90.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSVNiPn-JyiByJysT90Ka3r_33YVBjLyAgg_wooyrqVpPTUlgMyBHByb2RQgL2jAVoQIuQnkZwIM4ztLbkVCQimoHoCQtmCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=140363]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "8CFFFE41AFAF4F90B11B0E4F173C6A90.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSVNiPn-JyiByJysT90Ka3r_33YVBjLyAgg_wooyrqVpPTUlgMyBHByb2RQgL2jAVoQIuQnkZwIM4ztLbkVCQimoHoCQtmCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "140363"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160202,
+                    "message_id": 2109117746,
+                    "message_seq": 2109117746,
+                    "real_id": 2109117746,
+                    "real_seq": "1450",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=D747FE58FBA87A568F9C6DCB47012D4A.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTWM9NTwh2IkzFDonil4N8O4aPtgBirgRcg_woo0bixpPTUlgMyBHByb2RQgL2jAVoQk-bGxljtmbaLq13v05QFxXoCbcSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=377003]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "D747FE58FBA87A568F9C6DCB47012D4A.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTWM9NTwh2IkzFDonil4N8O4aPtgBirgRcg_woo0bixpPTUlgMyBHByb2RQgL2jAVoQk-bGxljtmbaLq13v05QFxXoCbcSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "377003"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160204,
+                    "message_id": 960464888,
+                    "message_seq": 960464888,
+                    "real_id": 960464888,
+                    "real_seq": "1451",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=1C4095FAFC41580EE5628BB85F74F84D.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ-gFPrL-XS11HpobrrxZDMsDdP6hi10wwg_woo29aRpPTUlgMyBHByb2RQgL2jAVoQhWgrXWzVyRbQlhZuoLx9v3oCnD-CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=207285]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "1C4095FAFC41580EE5628BB85F74F84D.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ-gFPrL-XS11HpobrrxZDMsDdP6hi10wwg_woo29aRpPTUlgMyBHByb2RQgL2jAVoQhWgrXWzVyRbQlhZuoLx9v3oCnD-CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "207285"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160207,
+                    "message_id": 1858571081,
+                    "message_seq": 1858571081,
+                    "real_id": 1858571081,
+                    "real_seq": "1452",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=0C069ED7D50B1BD83AE2D6E43C05E3DF.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQVDB6rjQ4V6RWBZxFHytyb3__ioBiiog8g_woo4IOEpPTUlgMyBHByb2RQgL2jAVoQ06rR-7TWffaw4FhqBKRaqHoCO-SCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=250146]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "0C069ED7D50B1BD83AE2D6E43C05E3DF.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQVDB6rjQ4V6RWBZxFHytyb3__ioBiiog8g_woo4IOEpPTUlgMyBHByb2RQgL2jAVoQ06rR-7TWffaw4FhqBKRaqHoCO-SCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "250146"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160209,
+                    "message_id": 1558349049,
+                    "message_seq": 1558349049,
+                    "real_id": 1558349049,
+                    "real_seq": "1453",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=FD004300E55BBD7BFD9CBB30D31978A1.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ2jNUV3VPC44jVNAuLg85g9QJxDRiU3BIg_woomuuhpPTUlgMyBHByb2RQgL2jAVoQwz8VmucXpI-G59S6H7Ty3HoC8weCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=306708]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "FD004300E55BBD7BFD9CBB30D31978A1.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ2jNUV3VPC44jVNAuLg85g9QJxDRiU3BIg_woomuuhpPTUlgMyBHByb2RQgL2jAVoQwz8VmucXpI-G59S6H7Ty3HoC8weCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "306708"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160212,
+                    "message_id": 1379308170,
+                    "message_seq": 1379308170,
+                    "real_id": 1379308170,
+                    "real_seq": "1454",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=CA692E24ED7D907C1964A7D162ADC580.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQ_ckAyfhqoIcK5ekw_X8RWH5iryBjcnw8g_wooltqlpPTUlgMyBHByb2RQgL2jAVoQ00b89Z7Ezj_Qn7IKtWeO1HoCBNWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=249820]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "CA692E24ED7D907C1964A7D162ADC580.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ_ckAyfhqoIcK5ekw_X8RWH5iryBjcnw8g_wooltqlpPTUlgMyBHByb2RQgL2jAVoQ00b89Z7Ezj_Qn7IKtWeO1HoCBNWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "249820"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160216,
+                    "message_id": 2019601115,
+                    "message_seq": 2019601115,
+                    "real_id": 2019601115,
+                    "real_seq": "1455",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=6777F5A58D165A8C390B41A16684EE9F.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRDvePqKqkotBkACzhEpbzW9PQjyhjqmxAg_wooqdW3pPTUlgMyBHByb2RQgL2jAVoQ6Ud4cZjiG6yvqiweqJrymHoC7NGCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=265706]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "6777F5A58D165A8C390B41A16684EE9F.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRDvePqKqkotBkACzhEpbzW9PQjyhjqmxAg_wooqdW3pPTUlgMyBHByb2RQgL2jAVoQ6Ud4cZjiG6yvqiweqJrymHoC7NGCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "265706"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160219,
+                    "message_id": 1366491028,
+                    "message_seq": 1366491028,
+                    "real_id": 1366491028,
+                    "real_seq": "1456",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=0C4B98E382FDA6F8AB0567518A516777.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTwl4uFqNMIWYuz_CppJZRK3EZzphjq0wYg_woo0_bRpPTUlgMyBHByb2RQgL2jAVoQ2pHljilGAd9ZwokzMXiozXoCOWSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=109034]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "0C4B98E382FDA6F8AB0567518A516777.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTwl4uFqNMIWYuz_CppJZRK3EZzphjq0wYg_woo0_bRpPTUlgMyBHByb2RQgL2jAVoQ2pHljilGAd9ZwokzMXiozXoCOWSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "109034"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160222,
+                    "message_id": 352169388,
+                    "message_seq": 352169388,
+                    "real_id": 352169388,
+                    "real_seq": "1457",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=81960E443EDF8C25D96372C9238023DD.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTmzJnX0C1NExW2ABJMov7L2OWmARi6-Acg_woo24HxpPTUlgMyBHByb2RQgL2jAVoQ-MNr_HHI7U6d6Yif_flkcXoCDsuCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=130106]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "81960E443EDF8C25D96372C9238023DD.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTmzJnX0C1NExW2ABJMov7L2OWmARi6-Acg_woo24HxpPTUlgMyBHByb2RQgL2jAVoQ-MNr_HHI7U6d6Yif_flkcXoCDsuCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "130106"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160225,
+                    "message_id": 1212561557,
+                    "message_seq": 1212561557,
+                    "real_id": 1212561557,
+                    "real_seq": "1458",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=1BB22456DDF625193FE129BB6913CE46.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRj6rjQc-mRS6XX2NliEJS9Nt5UwBi2rwog_woopo_CpPTUlgMyBHByb2RQgL2jAVoQ7f6uqJISt0JsN40NW8IWD3oC76eCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=169910]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "1BB22456DDF625193FE129BB6913CE46.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRj6rjQc-mRS6XX2NliEJS9Nt5UwBi2rwog_woopo_CpPTUlgMyBHByb2RQgL2jAVoQ7f6uqJISt0JsN40NW8IWD3oC76eCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "169910"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160228,
+                    "message_id": 1297716213,
+                    "message_seq": 1297716213,
+                    "real_id": 1297716213,
+                    "real_seq": "1459",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=E54B1CAD936CEFAAAD52E12624D4B804.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQjB3c-pKUbh4rdxHkJdBXdr9hBKxj0jRMg_woo4o7ZpPTUlgMyBHByb2RQgL2jAVoQQda1RsKEalVCUl7pt9DdRHoCtuKCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=313076]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "E54B1CAD936CEFAAAD52E12624D4B804.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQjB3c-pKUbh4rdxHkJdBXdr9hBKxj0jRMg_woo4o7ZpPTUlgMyBHByb2RQgL2jAVoQQda1RsKEalVCUl7pt9DdRHoCtuKCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "313076"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160232,
+                    "message_id": 1843076265,
+                    "message_seq": 1843076265,
+                    "real_id": 1843076265,
+                    "real_seq": "1460",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=594F0851B32270DACF732B3E10AFCA2A.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTQX52XFqWu8qcluc5FSfuVRaj2cxjuvBUg_wookb6BpfTUlgMyBHByb2RQgL2jAVoQgho-1QLYXMcmWX1Rg1Gj_noCYIWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=351854]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "594F0851B32270DACF732B3E10AFCA2A.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTQX52XFqWu8qcluc5FSfuVRaj2cxjuvBUg_wookb6BpfTUlgMyBHByb2RQgL2jAVoQgho-1QLYXMcmWX1Rg1Gj_noCYIWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "351854"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160235,
+                    "message_id": 1772559035,
+                    "message_seq": 1772559035,
+                    "real_id": 1772559035,
+                    "real_seq": "1461",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=66A629E69090B02A3FABB2F80D9A1B57.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRM3CMX8ZlS78Y5_p9XHAESjGSguhip2gwg_wooydDJpPTUlgMyBHByb2RQgL2jAVoQ8l5kDgRBEAwQhNReQwUacHoC9ZyCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=208169]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "66A629E69090B02A3FABB2F80D9A1B57.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRM3CMX8ZlS78Y5_p9XHAESjGSguhip2gwg_wooydDJpPTUlgMyBHByb2RQgL2jAVoQ8l5kDgRBEAwQhNReQwUacHoC9ZyCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "208169"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160238,
+                    "message_id": 1122605650,
+                    "message_seq": 1122605650,
+                    "real_id": 1122605650,
+                    "real_seq": "1462",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=AEA2392F2C07FA9599EE311AA12B5FA8.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTr_nW98RDhvSWF-hTdVh_4tEZPhhjqnBMg_woo9svppPTUlgMyBHByb2RQgL2jAVoQuUcZiCZaKK55PkvNOhTOqnoC236CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=314986]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "AEA2392F2C07FA9599EE311AA12B5FA8.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTr_nW98RDhvSWF-hTdVh_4tEZPhhjqnBMg_woo9svppPTUlgMyBHByb2RQgL2jAVoQuUcZiCZaKK55PkvNOhTOqnoC236CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "314986"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160242,
+                    "message_id": 998690940,
+                    "message_seq": 998690940,
+                    "real_id": 998690940,
+                    "real_seq": "1463",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=AA6857D85E1AD136908E3F48BAF3CFDE.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQLN5B19toB3tXy8A6S0zIw0Y3HfRiJkxYg_woovLDipPTUlgMyBHByb2RQgL2jAVoQEJIoAnpA8mz32kOXMNHBSXoC4EWCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=362889]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "AA6857D85E1AD136908E3F48BAF3CFDE.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQLN5B19toB3tXy8A6S0zIw0Y3HfRiJkxYg_woovLDipPTUlgMyBHByb2RQgL2jAVoQEJIoAnpA8mz32kOXMNHBSXoC4EWCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "362889"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160245,
+                    "message_id": 10522754,
+                    "message_seq": 10522754,
+                    "real_id": 10522754,
+                    "real_seq": "1464",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=A73A0F7787C9025E43A70FDA4AEDC6D1.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhS6Zso2U8VFFaYoi2bAfOcAStn0lBiOyxAg_woolO35pPTUlgMyBHByb2RQgL2jAVoQEYxaWB_kweFoZPy8RFw3NXoCUqSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=271758]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "A73A0F7787C9025E43A70FDA4AEDC6D1.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS6Zso2U8VFFaYoi2bAfOcAStn0lBiOyxAg_woolO35pPTUlgMyBHByb2RQgL2jAVoQEYxaWB_kweFoZPy8RFw3NXoCUqSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "271758"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160247,
+                    "message_id": 1526939858,
+                    "message_seq": 1526939858,
+                    "real_id": 1526939858,
+                    "real_seq": "1465",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=87F835F91BBC7DC14D7F4E4B889DDF37.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSVT90iNHXN2gOXKYPszwlhcwSJbBiaxg4g_woo1JaIpfTUlgMyBHByb2RQgL2jAVoQlg5arPz3Le8mEHVLZyQTo3oCqtOCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=238362]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "87F835F91BBC7DC14D7F4E4B889DDF37.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSVT90iNHXN2gOXKYPszwlhcwSJbBiaxg4g_woo1JaIpfTUlgMyBHByb2RQgL2jAVoQlg5arPz3Le8mEHVLZyQTo3oCqtOCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "238362"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160252,
+                    "message_id": 360311957,
+                    "message_seq": 360311957,
+                    "real_id": 360311957,
+                    "real_seq": "1466",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=7CD8E2507136EE807F417A6F3AC4B8C2.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTOKg-P3s3Op_Gtr0-91CayQnWt2BjL-BIg_wookpuRpfTUlgMyBHByb2RQgL2jAVoQfXBNnJ2iYoAwymoEIFyu3HoCYSSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=310347]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "7CD8E2507136EE807F417A6F3AC4B8C2.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTOKg-P3s3Op_Gtr0-91CayQnWt2BjL-BIg_wookpuRpfTUlgMyBHByb2RQgL2jAVoQfXBNnJ2iYoAwymoEIFyu3HoCYSSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "310347"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160255,
+                    "message_id": 1339577224,
+                    "message_seq": 1339577224,
+                    "real_id": 1339577224,
+                    "real_seq": "1467",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=220765C8E5601303C2A34B0CFA5A1BC7.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhS2qpe99s7U7J-P7yf30SdncFZsKRjqoRIg_woonoCXpfTUlgMyBHByb2RQgL2jAVoQ_BXqErJuRJTMWi2zDmMjX3oCDxiCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=299242]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "220765C8E5601303C2A34B0CFA5A1BC7.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS2qpe99s7U7J-P7yf30SdncFZsKRjqoRIg_woonoCXpfTUlgMyBHByb2RQgL2jAVoQ_BXqErJuRJTMWi2zDmMjX3oCDxiCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "299242"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160259,
+                    "message_id": 411398123,
+                    "message_seq": 411398123,
+                    "real_id": 411398123,
+                    "real_seq": "1468",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=2F21E1757735A85FD16A8A5381773B21.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhQkB9GkpEmeug5lJ-FfKrj8o1mhVhij4yYg_woo04SjpfTUlgMyBHByb2RQgL2jAVoQt6zNUDqVAsaKbXppsnnEJXoCT8-CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=635299]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "2F21E1757735A85FD16A8A5381773B21.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQkB9GkpEmeug5lJ-FfKrj8o1mhVhij4yYg_woo04SjpfTUlgMyBHByb2RQgL2jAVoQt6zNUDqVAsaKbXppsnnEJXoCT8-CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "635299"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160265,
+                    "message_id": 1254281878,
+                    "message_seq": 1254281878,
+                    "real_id": 1254281878,
+                    "real_seq": "1469",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=1D9805BD076B86F566656AE42B12517E.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhRlOoFENCEN-N5wNQdZB-M7BoQdExjxhgwg_woo9bWmpfTUlgMyBHByb2RQgL2jAVoQ5LRfW7EWHGT6S3XhoLReI3oCKuGCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=197489]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "1D9805BD076B86F566656AE42B12517E.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRlOoFENCEN-N5wNQdZB-M7BoQdExjxhgwg_woo9bWmpfTUlgMyBHByb2RQgL2jAVoQ5LRfW7EWHGT6S3XhoLReI3oCKuGCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "197489"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160267,
+                    "message_id": 245137762,
+                    "message_seq": 245137762,
+                    "real_id": 245137762,
+                    "real_seq": "1470",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:image,file=4D92C90EF19B73CF91C5CA5333FBF83D.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhSib-GXYardbHOifk-86iqa20ZHgBiyzg0g_wooxq-ypfTUlgMyBHByb2RQgL2jAVoQmotyoONLAT3u0-Vpn2NKe3oCPi2CAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=223026]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "image",
+                        "data": {
+                          "summary": "",
+                          "file": "4D92C90EF19B73CF91C5CA5333FBF83D.jpg",
+                          "sub_type": 0,
+                          "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSib-GXYardbHOifk-86iqa20ZHgBiyzg0g_wooxq-ypfTUlgMyBHByb2RQgL2jAVoQmotyoONLAT3u0-Vpn2NKe3oCPi2CAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                          "file_size": "223026"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160277,
+                    "message_id": 178620170,
+                    "message_seq": 178620170,
+                    "real_id": 178620170,
+                    "real_seq": "1471",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": "更多后续↓↓\nhttps://pd.qq.com/s/b7f20kfci\n 🐂🍺網摞🔥逆天⚡️发源地🌈"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160277,
+                    "message_id": 672464562,
+                    "message_seq": 672464562,
+                    "real_id": 672464562,
+                    "real_seq": "1472",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "备用↓",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "text",
+                        "data": {
+                          "text": "备用↓"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  },
+                  {
+                    "self_id": 2065277052,
+                    "user_id": 1094950020,
+                    "time": 1788160278,
+                    "message_id": 220136735,
+                    "message_seq": 220136735,
+                    "real_id": 220136735,
+                    "real_seq": "1473",
+                    "message_type": "private",
+                    "sender": {
+                      "user_id": 1094950020,
+                      "nickname": "QQ用户",
+                      "card": ""
+                    },
+                    "raw_message": "[CQ:json,data={\"app\":\"com.tencent.troopsharecard\"&#44;\"desc\":\"\"&#44;\"view\":\"contact\"&#44;\"bizsrc\":\"\"&#44;\"ver\":\"1.0.0.30\"&#44;\"prompt\":\"群名片: 王者荣耀组队\"&#44;\"appID\":\"\"&#44;\"sourceName\":\"\"&#44;\"actionData\":\"\"&#44;\"actionData_A\":\"\"&#44;\"sourceUrl\":\"\"&#44;\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"&#44;\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\"&#44;\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&amp;k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&amp;authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&amp;noverify=0&amp;group_code=626933704\"&#44;\"nickname\":\"王者荣耀组队\"&#44;\"tag\":\"群名片\"&#44;\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}}&#44;\"config\":{\"ctime\":1785572595&#44;\"token\":\"179a2687ae7242a9538631936e2fb9bc\"}&#44;\"text\":\"\"&#44;\"extraApps\":&#91;&#93;&#44;\"sourceAd\":\"\"&#44;\"extra\":\"\"}]",
+                    "font": 14,
+                    "sub_type": "friend",
+                    "message": [
+                      {
+                        "type": "json",
+                        "data": {
+                          "data": "{\"app\":\"com.tencent.troopsharecard\",\"desc\":\"\",\"view\":\"contact\",\"bizsrc\":\"\",\"ver\":\"1.0.0.30\",\"prompt\":\"群名片: 王者荣耀组队\",\"appID\":\"\",\"sourceName\":\"\",\"actionData\":\"\",\"actionData_A\":\"\",\"sourceUrl\":\"\",\"meta\":{\"contact\":{\"avatar\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\",\"contact\":\"元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\\n元梦之星☞点击开🦌https:\\/\\/qm.qq.com\\/q\\/L72lCxOSoq\",\"jumpUrl\":\"http:\\/\\/qm.qq.com\\/cgi-bin\\/qm\\/qr?_wv=1027&k=CwcJo6fZfCD2Qn6r4aZ5I2sHm9VJFO0J&authKey=YzR33I2srv37qvkcWo%2FkIrpX43xrVRsa8h63jsFIQ441SAFuoNWFLp19mXkFw6vz&noverify=0&group_code=626933704\",\"nickname\":\"王者荣耀组队\",\"tag\":\"群名片\",\"tagIcon\":\"https:\\/\\/p.qlogo.cn\\/gh\\/626933704\\/626933704_4\\/100\"}},\"config\":{\"ctime\":1785572595,\"token\":\"179a2687ae7242a9538631936e2fb9bc\"},\"text\":\"\",\"extraApps\":[],\"sourceAd\":\"\",\"extra\":\"\"}"
+                        }
+                      }
+                    ],
+                    "message_format": "array",
+                    "post_type": "message"
+                  }
+                ]
+              }
+            }
+          ],
+          "message_format": "array",
+          "post_type": "message"
+        },
+        {
+          "self_id": 2065277052,
+          "user_id": 1094950020,
+          "time": 1788160320,
+          "message_id": 323237254,
+          "message_seq": 323237254,
+          "real_id": 323237254,
+          "real_seq": "1476",
+          "message_type": "private",
+          "sender": {
+            "user_id": 1094950020,
+            "nickname": "QQ用户",
+            "card": ""
+          },
+          "raw_message": "喜欢😋",
+          "font": 14,
+          "sub_type": "friend",
+          "message": [
+            {
+              "type": "text",
+              "data": {
+                "text": "喜欢"
+              }
+            },
+            {
+              "type": "text",
+              "data": {
+                "text": "😋"
+              }
+            }
+          ],
+          "message_format": "array",
+          "post_type": "message"
+        },
+        {
+          "self_id": 2065277052,
+          "user_id": 1094950020,
+          "time": 1788160323,
+          "message_id": 402528085,
+          "message_seq": 402528085,
+          "real_id": 402528085,
+          "real_seq": "1477",
+          "message_type": "private",
+          "sender": {
+            "user_id": 1094950020,
+            "nickname": "QQ用户",
+            "card": ""
+          },
+          "raw_message": "[CQ:image,summary=&#91;动画表情&#93;,file=78C0E861839F265DC969D07129D144CD.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&amp;fileid=EhTGj7D0nuprrsALEfMKNRUmatzPDRiv9Acg_woozce1pfTUlgMyBHByb2RQgL2jAVoQS_XSr5AwLOC8-W8897pEVXoCBSSCAQJuag&amp;rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw,file_size=129583]",
+          "font": 14,
+          "sub_type": "friend",
+          "message": [
+            {
+              "type": "image",
+              "data": {
+                "summary": "[动画表情]",
+                "file": "78C0E861839F265DC969D07129D144CD.jpg",
+                "sub_type": 1,
+                "url": "https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTGj7D0nuprrsALEfMKNRUmatzPDRiv9Acg_woozce1pfTUlgMyBHByb2RQgL2jAVoQS_XSr5AwLOC8-W8897pEVXoCBSSCAQJuag&rkey=CAISMGOMbAmnWTTZ1gV6IjzkizCywNHWlV36-Zij2i81-itYdF2K-TdQx4LW-0MiTeewFw",
+                "file_size": "129583"
+              }
+            }
+          ],
+          "message_format": "array",
+          "post_type": "message"
+        }
+      ]
+    },
+    "message": "",
+    "wording": "",
+    "echo": "dump-1",
+    "stream": "normal-action"
+  }
+}

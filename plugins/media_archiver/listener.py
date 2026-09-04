@@ -2,6 +2,7 @@
 
 
 import asyncio
+import html
 import logging
 import os
 import re
@@ -55,6 +56,12 @@ _background_tasks: set[asyncio.Task] = set()
 # 扫描并发信号量：限制同时进行的媒体处理数（get_file 触发 NapCat
 # downloadMedia 可能长时间阻塞，串行等待会让扫描极慢）
 _scan_sem = asyncio.Semaphore(3)
+
+# get_file 会触发 NT 内核 downloadRichMedia。转发内层消息经常不在本地库，
+# 内核默认空等 120s。必须设上限，并限制并发，避免堵死 OneBot 后续消息。
+_GET_FILE_TIMEOUT = 40.0
+_GET_FILE_RETRY_WAIT = 5.0
+_GET_FILE_SEM = asyncio.Semaphore(3)
 
 
 async def _startup() -> None:
@@ -152,6 +159,17 @@ async def handle_message(bot: Bot, event: Event) -> None:
             _background_tasks.add(task)
             task.add_done_callback(_background_tasks.discard)
         return
+
+    # 非转发消息中的磁力链接（转发内的磁力由 _archive_forward_links 处理）
+    try:
+        await _archive_plain_magnets(
+            segments=event.message,
+            group_id=group_id,
+            message_id=message_id,
+            user_id=user_id,
+        )
+    except Exception:
+        logger.exception("磁力链接存档失败 | 消息ID: %d", message_id)
 
     # 提取媒体项
     media_items = classify_message(event.message)
@@ -319,13 +337,11 @@ async def _process_media_item(
                 )
             if local_path is None:
                 # 本地缓存全无 -> get_file 按文件名命中 NapCat 资源引用
-                # 缓存（直接发送的视频 24h 内有效），换取 CDN URL 下载。
-                # 转发拆包视频的 downloadMedia 必然超时（消息不在本地库），
-                # 跳过避免每个白等 1-2 分钟拖慢扫描
-                if not skip_url_refresh:
-                    local_path = await _try_get_file_download(
-                        bot, item, download_url, temp_dir,
-                    )
+                # 缓存（Jt 内存 24h）。转发拆包同样尝试：视频段 file 名就是
+                # 缓存键。调用带超时，失败就放弃，不拖死后续消息。
+                local_path = await _try_get_file_download(
+                    bot, item, download_url, temp_dir,
+                )
             if local_path:
                 logger.warning("%s 本地路径文件，直接复制成功，继续归档", tag)
                 result = DownloadResult(
@@ -333,7 +349,7 @@ async def _process_media_item(
                     file_size=local_path.stat().st_size,
                 )
             else:
-                logger.error("%s 本地文件不存在或复制失败: %s", tag, download_url[:80])
+                logger.error("%s 本地缓存与 get_file 均失败: %s", tag, download_url[:80])
                 return False
         else:
             try:
@@ -344,9 +360,8 @@ async def _process_media_item(
                 #   命中缓存或从服务器搜索下载）
                 if item.media_type in ("video", "record", "file", "image"):
                     local_path = await _copy_local_file(item, temp_dir)
-                    if local_path is None and not skip_url_refresh:
+                    if local_path is None:
                         # 本地缓存全无 -> get_file 命中资源引用缓存换 CDN URL
-                        # （转发拆包视频跳过：downloadMedia 必然超时）
                         local_path = await _try_get_file_download(
                             bot, item, item.url or download_url, temp_dir,
                         )
@@ -502,6 +517,16 @@ async def _process_history_message(
                 source_message_id=msg_id,
             )
         return 0
+
+    try:
+        await _archive_plain_magnets(
+            segments=onebot_msg,
+            group_id=group_id,
+            message_id=msg_id,
+            user_id=user_id,
+        )
+    except Exception:
+        logger.exception("历史消息磁力链接存档失败 | 消息ID: %d", msg_id)
 
     # 提取媒体项
     media_items = classify_message(onebot_msg)
@@ -919,6 +944,7 @@ async def _copy_local_file(
 
 async def _try_get_file_download(
     bot: Bot, item: MediaItem, url: str, temp_dir: Path,
+    timeout: float | None = None,
 ) -> Path | None:
     """
     通过 NapCat get_file API 按文件名换取下载地址。
@@ -926,8 +952,12 @@ async def _try_get_file_download(
     NapCat 转换视频段时会将 {peer, msgId, elementId, fileUUID} 以文件名为
     键存入内存缓存（24 小时有效）。get_file(file=文件名) 命中缓存后可
     触发 downloadMedia 从服务器下载，返回 {file: 本地路径, url: CDN 地址}。
-    对直接发送/近期收到的视频有效；转发拆包的消息缓存键不匹配，通常无效。
+
+    单次调用有超时上限；超时后只短等再试一次（内核可能后台下完）。
+    找不到文件立即放弃，不空等。
     """
+    api_timeout = _GET_FILE_TIMEOUT if timeout is None else timeout
+
     # 候选参数：消息段 file 名（带扩展名优先）、URL 文件名、file_id
     candidates: list[str] = []
     if item.file_name:
@@ -940,32 +970,39 @@ async def _try_get_file_download(
         candidates.append(item.file_id)
 
     seen: set[str] = set()
-    for cand in candidates:
-        if not cand or cand in seen:
-            continue
-        seen.add(cand)
+    async with _GET_FILE_SEM:
+        for cand in candidates:
+            if not cand or cand in seen:
+                continue
+            seen.add(cand)
 
-        # downloadMedia 内部等待下载完成事件可能超时（大文件下载慢），
-        # 但下载可能在后台继续，延迟后重试一次可命中已下载的文件。
-        # 注意：转发拆包的视频消息不在本地库，downloadMedia 必然超时，
-        # 重试次数过多会浪费大量时间（每次超时 30-60s），只重试一次。
-        for attempt in range(2):
+            timed_out = False
+            resp = None
             try:
                 logger.warning(
-                    "[get_file] 按文件名换取下载地址(第%d次): file=%s",
-                    attempt + 1, cand[:80],
+                    "[get_file] 按文件名换取下载地址 (timeout=%.0fs): file=%s",
+                    api_timeout, cand[:80],
                 )
-                # 注意：NoneBot call_api 用 _timeout 参数控制超时（默认 60s，
-                # 大文件 downloadMedia 下载可能超时，放宽到 300s）
-                resp = await bot.call_api("get_file", file=cand, _timeout=300)
-            except Exception as e:
+                # NoneBot call_api 用 _timeout；再套 wait_for 防止其未生效
+                wait_budget = api_timeout + min(2.0, max(0.05, api_timeout * 0.25))
+                resp = await asyncio.wait_for(
+                    bot.call_api("get_file", file=cand, _timeout=api_timeout),
+                    timeout=wait_budget,
+                )
+            except asyncio.TimeoutError:
+                timed_out = True
                 logger.warning(
-                    "[get_file] %s 失败: %s: %s", cand[:60], type(e).__name__, e,
+                    "[get_file] 超时 (%.0fs): file=%s", api_timeout, cand[:60],
                 )
-                resp = None
+            except Exception as e:
+                err_name = type(e).__name__
+                if "timeout" in err_name.lower() or "timeout" in str(e).lower():
+                    timed_out = True
+                logger.warning(
+                    "[get_file] %s 失败: %s: %s", cand[:60], err_name, e,
+                )
 
             if isinstance(resp, dict):
-                # 1) NapCat 下载到本地缓存后的路径
                 local = resp.get("file", "")
                 if local and isinstance(local, str):
                     src = Path(local)
@@ -973,19 +1010,31 @@ async def _try_get_file_download(
                         logger.warning("[get_file] 服务器重新下载成功: %s", src)
                         return await _copy_src_to_temp(src, temp_dir)
 
-                # 2) 返回的 CDN 下载地址
                 http_url = resp.get("url", "")
-                if http_url and isinstance(http_url, str) and http_url.startswith("http"):
+                if (
+                    http_url
+                    and isinstance(http_url, str)
+                    and http_url.startswith("http")
+                ):
                     try:
                         result = await _downloader.download(http_url, temp_dir)
                         return result.temp_path
                     except DownloadError as e:
                         logger.warning("[get_file] CDN 下载失败: %s", e)
 
-            # 失败后等待下载在后台继续，再重试
-            if attempt < 2:
-                logger.warning("[get_file] 等待 %d 秒后重试 %s ...", 20, cand[:60])
-                await asyncio.sleep(20)
+            # 超时后短等再扫本地：内核可能后台下完。不再发第二次
+            # get_file，避免和仍在跑的 downloadMedia 叠请求。
+            if timed_out and api_timeout >= 5:
+                retry_wait = min(_GET_FILE_RETRY_WAIT, api_timeout)
+                logger.warning(
+                    "[get_file] 超时后等待 %.0f 秒检查本地缓存 %s ...",
+                    retry_wait, cand[:60],
+                )
+                await asyncio.sleep(retry_wait)
+                landed = await _copy_local_file(item, temp_dir, url=url)
+                if landed:
+                    logger.warning("[get_file] 超时后本地缓存已落盘: %s", item.file_name)
+                    return landed
 
     return None
 
@@ -998,6 +1047,10 @@ _CODE_RE = re.compile(
     r"口令|暗号|pwd|code|key)[=:：\s]*([A-Za-z0-9_-]{3,})",
     re.IGNORECASE,
 )
+# 磁力链接：magnet:?xt=urn:btih:... / btmh:... ，截到空白或常见包裹符
+_MAGNET_RE = re.compile(r"magnet:\?[^\s<>\"'）)\]】]+", re.IGNORECASE)
+_MAGNET_XT_RE = re.compile(r"xt=urn:(?:btih|btmh):[0-9a-z]+", re.IGNORECASE)
+_TRAIL_PUNCT_RE = re.compile(r"[.,;，。；!！?？、]+$")
 
 
 def _extract_links(text: str) -> list[str]:
@@ -1010,30 +1063,80 @@ def _extract_codes(text: str) -> list[str]:
     return _CODE_RE.findall(text)
 
 
+def _extract_magnets(text: str) -> list[str]:
+    """从文本中提取磁力链接（magnet:?xt=urn:btih/btmh:...），保序去重。"""
+    if not text:
+        return []
+    cleaned = html.unescape(text).replace("\u200b", "").replace("\ufeff", "")
+    found: list[str] = []
+    seen: set[str] = set()
+    for m in _MAGNET_RE.finditer(cleaned):
+        raw = _TRAIL_PUNCT_RE.sub("", m.group(0)).rstrip("&")
+        if not _MAGNET_XT_RE.search(raw):
+            continue
+        key = raw.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        found.append(raw)
+    return found
+
+
+def _collect_segment_texts(segments) -> str:
+    """收集消息段中的文本 + json（群分享卡片等）内容。"""
+    texts: list[str] = []
+    for s in segments or []:
+        if hasattr(s, "type"):
+            stype = s.type
+            data = s.data or {}
+        elif isinstance(s, dict):
+            stype = s.get("type")
+            data = s.get("data") or {}
+        else:
+            continue
+        if stype == "text":
+            texts.append(str(data.get("text", "") or ""))
+        elif stype == "json":
+            j = data.get("data", "")
+            if isinstance(j, str):
+                texts.append(j)
+    return "\n".join(texts).strip()
+
+
+def _links_month_dir(group_id: int, when: datetime | None = None) -> Path:
+    """网盘/磁力链接共用归档目录: {archive_root}/{group_id}/links/{YYYY-MM}"""
+    now = when or datetime.now()
+    return (
+        get_config().get_archive_path()
+        / str(group_id) / "links" / now.strftime("%Y-%m")
+    )
+
+
+async def _write_text_file(path: Path, content: str) -> None:
+    async with aiofiles.open(path, "w", encoding="utf-8") as f:
+        await f.write(content)
+
+
+def _quote_block(text: str, depth: int) -> str:
+    prefix = "> " * (depth + 1)
+    return prefix + text.replace("\n", "\n" + prefix)
+
+
 async def _archive_forward_links(
     content: list, group_id: int, source_message_id: int, user_id: int,
 ) -> None:
     """
-    提取转发消息中的网盘链接/密码等信息并存档为 markdown 文件。
+    提取转发消息中的网盘链接/密码、磁力链接，分别存档为 markdown 文件。
 
-    存档位置: {archive_root}/{group_id}/links/{YYYY-MM}/forward_{源消息ID}.md
+    存档位置（同一目录、不同文件）:
+      {archive_root}/{group_id}/links/{YYYY-MM}/forward_{源消息ID}.md
+      {archive_root}/{group_id}/links/{YYYY-MM}/magnet_{源消息ID}.md
 
     递归遍历嵌套 forward，只要合集内存在链接或密码类内容，就将所有
     层级的文本消息完整存档（网盘链接后面的说明/解压密码等上下文一并
     保留），并标注每条消息提取出的链接与密码。
+    磁力链接单独写入 magnet_*.md，不与网盘文件混存。
     """
-
-    def _collect_texts(sub: dict) -> str:
-        """收集消息的文本段 + json 段（群分享卡片等）内容"""
-        texts: list[str] = []
-        for s in sub.get("message", []):
-            if s.get("type") == "text":
-                texts.append(s.get("data", {}).get("text", ""))
-            elif s.get("type") == "json":
-                j = s.get("data", {}).get("data", "")
-                if isinstance(j, str):
-                    texts.append(j)
-        return "\n".join(texts).strip()
 
     def _collect_all(msgs: list, out: list, depth: int = 0) -> None:
         """递归收集所有层级的文本消息（含嵌套 forward 内层）"""
@@ -1045,56 +1148,208 @@ async def _archive_forward_links(
                     inner = s.get("data", {}).get("content") or s.get("data", {}).get("messages")
                     if isinstance(inner, list):
                         _collect_all(inner, out, depth + 1)
-            joined = _collect_texts(sub)
+            joined = _collect_segment_texts(sub.get("message", []))
             if joined:
                 out.append((sub_uid, joined, depth))
 
     collected: list[tuple[int, str, int]] = []
     _collect_all(content, collected)
 
-    # 第一遍：判断是否存在链接/密码类内容
-    if not any(_extract_links(t) or _extract_codes(t) for _, t, _ in collected):
+    has_cloud = any(_extract_links(t) or _extract_codes(t) for _, t, _ in collected)
+    has_magnet = any(_extract_magnets(t) for _, t, _ in collected)
+    if not has_cloud and not has_magnet:
         return
 
-    # 第二遍：存档所有文本消息
-    lines: list[str] = []
-    for i, (sub_uid, joined, depth) in enumerate(collected, 1):
-        links = _extract_links(joined)
-        codes = _extract_codes(joined)
+    now = datetime.now()
+    links_dir = _links_month_dir(group_id, now)
+    links_dir.mkdir(parents=True, exist_ok=True)
 
-        prefix = "> " * (depth + 1)
-        lines.append(f"## 消息 {i} (用户 {sub_uid})")
-        lines.append(prefix + joined.replace("\n", "\n" + prefix))
-        if links:
+    if has_cloud:
+        lines: list[str] = []
+        for i, (sub_uid, joined, depth) in enumerate(collected, 1):
+            links = _extract_links(joined)
+            codes = _extract_codes(joined)
+
+            lines.append(f"## 消息 {i} (用户 {sub_uid})")
+            lines.append(_quote_block(joined, depth))
+            if links:
+                lines.append("")
+                lines.append("链接:")
+                lines.extend(f"- {l}" for l in links)
+            if codes:
+                lines.append("")
+                lines.append("密码/提取码:")
+                lines.extend(f"- {c}" for c in codes)
             lines.append("")
-            lines.append("链接:")
-            lines.extend(f"- {l}" for l in links)
-        if codes:
-            lines.append("")
-            lines.append("密码/提取码:")
-            lines.extend(f"- {c}" for c in codes)
-        lines.append("")
+
+        fpath = links_dir / f"forward_{source_message_id}.md"
+        header = [
+            "# 转发消息链接存档",
+            f"- 转发时间: {now.strftime('%Y-%m-%d %H:%M:%S')}",
+            f"- 群: {group_id}",
+            f"- 发送者: {user_id}",
+            f"- 源消息ID: {source_message_id}",
+            "",
+        ]
+        await _write_text_file(fpath, "\n".join(header + lines))
+        logger.warning("转发链接存档: %s", fpath)
+
+    if has_magnet:
+        magnet_lines: list[str] = []
+        magnet_count = 0
+        for i, (sub_uid, joined, depth) in enumerate(collected, 1):
+            magnets = _extract_magnets(joined)
+            if not magnets:
+                continue
+            magnet_count += len(magnets)
+            magnet_lines.append(f"## 消息 {i} (用户 {sub_uid})")
+            magnet_lines.append(_quote_block(joined, depth))
+            magnet_lines.append("")
+            magnet_lines.append("磁力链接:")
+            magnet_lines.extend(f"- {m}" for m in magnets)
+            magnet_lines.append("")
+
+        fpath = links_dir / f"magnet_{source_message_id}.md"
+        header = [
+            "# 转发消息磁力链接存档",
+            f"- 转发时间: {now.strftime('%Y-%m-%d %H:%M:%S')}",
+            f"- 群: {group_id}",
+            f"- 发送者: {user_id}",
+            f"- 源消息ID: {source_message_id}",
+            "",
+        ]
+        await _write_text_file(fpath, "\n".join(header + magnet_lines))
+        logger.warning("转发磁力链接存档: %s (%d 条)", fpath, magnet_count)
+
+
+async def _archive_plain_magnets(
+    segments, group_id: int, message_id: int, user_id: int,
+) -> None:
+    """
+    归档非转发消息中的磁力链接。
+
+    存档位置与网盘链接相同目录、不同文件:
+      {archive_root}/{group_id}/links/{YYYY-MM}/magnet_{消息ID}.md
+    """
+    joined = _collect_segment_texts(segments)
+    magnets = _extract_magnets(joined)
+    if not magnets:
+        return
 
     now = datetime.now()
-    links_dir = (
-        get_config().get_archive_path()
-        / str(group_id) / "links" / now.strftime("%Y-%m")
-    )
+    links_dir = _links_month_dir(group_id, now)
     links_dir.mkdir(parents=True, exist_ok=True)
-    fpath = links_dir / f"forward_{source_message_id}.md"
+    fpath = links_dir / f"magnet_{message_id}.md"
 
     header = [
-        "# 转发消息链接存档",
-        f"- 转发时间: {now.strftime('%Y-%m-%d %H:%M:%S')}",
+        "# 消息磁力链接存档",
+        f"- 时间: {now.strftime('%Y-%m-%d %H:%M:%S')}",
         f"- 群: {group_id}",
         f"- 发送者: {user_id}",
-        f"- 源消息ID: {source_message_id}",
+        f"- 源消息ID: {message_id}",
         "",
     ]
-    async with aiofiles.open(fpath, "w", encoding="utf-8") as f:
-        await f.write("\n".join(header + lines))
+    body = [
+        "## 消息内容",
+        _quote_block(joined, 0),
+        "",
+        "磁力链接:",
+        *[f"- {m}" for m in magnets],
+        "",
+    ]
+    await _write_text_file(fpath, "\n".join(header + body))
+    logger.warning("磁力链接存档: %s (%d 条)", fpath, len(magnets))
 
-    logger.warning("转发链接存档: %s", fpath)
+
+def _unwrap_api_data(resp) -> dict:
+    """NoneBot call_api 通常已解开 data；兼容仍包一层 {data: ...} 的返回。"""
+    if not isinstance(resp, dict):
+        return {}
+    if "message" in resp or "messages" in resp:
+        return resp
+    data = resp.get("data")
+    if isinstance(data, dict):
+        return data
+    return resp
+
+
+def _forward_content_from_msg(msg_resp) -> list | None:
+    """从 get_msg 返回中取出 forward 段的 content。"""
+    data = _unwrap_api_data(msg_resp)
+    for seg in data.get("message") or []:
+        if not isinstance(seg, dict) or seg.get("type") != "forward":
+            continue
+        seg_data = seg.get("data") or {}
+        content = seg_data.get("content") or seg_data.get("messages")
+        if isinstance(content, list) and content:
+            return content
+    return None
+
+
+def _messages_from_forward_resp(resp) -> list:
+    """从 get_forward_msg 返回中取出 messages 列表。"""
+    messages = _unwrap_api_data(resp).get("messages")
+    return messages if isinstance(messages, list) else []
+
+
+async def _run_forward_media_item(
+    bot: Bot,
+    item: MediaItem,
+    group_id: int,
+    user_id: int,
+    message_id: int,
+    seq: int,
+) -> int:
+    """处理单条转发媒体。失败返回 0，不把异常抛给 gather。
+
+    挂起保护在 get_file / HTTP 下载各自的超时上，不在这里再套总超时：
+    否则并发排队时间会算进预算，排在后面的视频还没轮到就被取消。
+    """
+    try:
+        ok = await _process_media_item(
+            bot=bot, item=item, group_id=group_id,
+            user_id=user_id, message_id=message_id, seq=seq,
+            skip_url_refresh=True,
+        )
+        return 1 if ok else 0
+    except Exception:
+        logger.exception("转发媒体处理异常 | 消息ID: %d", message_id)
+        return 0
+
+
+async def _process_nested_forward_seg(
+    bot: Bot,
+    sf_seg,
+    group_id: int,
+    default_user_id: int,
+    default_msg_id: int,
+) -> int:
+    """展开一段嵌套 forward 并递归处理。"""
+    sf_id = sf_seg.data.get("id", "")
+    if not sf_id:
+        return 0
+    sf_content = sf_seg.data.get("content") or sf_seg.data.get("messages")
+    if sf_content and isinstance(sf_content, list):
+        return await _process_forward_content(
+            bot=bot, items=sf_content, group_id=group_id,
+            default_user_id=default_user_id, default_msg_id=default_msg_id,
+        )
+    try:
+        sf_result = await asyncio.wait_for(
+            bot.call_api("get_forward_msg", id=sf_id, _timeout=30),
+            timeout=32,
+        )
+        sf_msgs = _messages_from_forward_resp(sf_result)
+        if sf_msgs:
+            return await _process_forward_content(
+                bot=bot, items=sf_msgs, group_id=group_id,
+                default_user_id=default_user_id, default_msg_id=default_msg_id,
+            )
+    except asyncio.TimeoutError:
+        logger.warning("  嵌套 forward %s 展开超时", sf_id)
+    except Exception as e:
+        logger.warning("  嵌套 forward %s 无法展开: %s", sf_id, e)
+    return 0
 
 
 async def _process_forward_content(
@@ -1106,21 +1361,21 @@ async def _process_forward_content(
 ) -> int:
     """
     递归处理已展开的 forward content 消息列表。
-    items 中的每条消息可能包含媒体（image/video/record/file）或嵌套的 forward。
+    同层媒体与嵌套转发并发处理，加快可下载视频落盘。
 
     Returns:
         成功归档的媒体项数量。
     """
     from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
-    archived_count = 0
+    cfg = get_config()
+    coros: list = []
 
     for i, sub_msg in enumerate(items):
         sub_raw = sub_msg.get("message", [])
         if not sub_raw:
             continue
 
-        # 转成 MessageSegment 对象
         try:
             if isinstance(sub_raw, list) and len(sub_raw) > 0 and isinstance(sub_raw[0], dict):
                 segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in sub_raw if isinstance(s, dict)]
@@ -1136,49 +1391,40 @@ async def _process_forward_content(
         # 转发拆包消息 ID 加偏移，避免与真实消息 ID 冲突（见 _FORWARD_ID_OFFSET）
         sub_mid = sub_mid + _FORWARD_ID_OFFSET
 
-        # 递归处理嵌套的 forward
-        sub_fwd_segs = [s for s in sub_onebot if s.type == "forward"]
-        if sub_fwd_segs:
-            for sf_seg in sub_fwd_segs:
-                sf_id = sf_seg.data.get("id", "")
-                if not sf_id:
-                    continue
-                sf_content = sf_seg.data.get("content") or sf_seg.data.get("messages")
-                if sf_content and isinstance(sf_content, list):
-                    archived_count += await _process_forward_content(
-                        bot=bot, items=sf_content, group_id=group_id,
-                        default_user_id=sub_uid, default_msg_id=sub_mid,
-                    )
-                else:
-                    try:
-                        sf_result = await bot.call_api("get_forward_msg", id=sf_id)
-                        sf_msgs = []
-                        if isinstance(sf_result, dict):
-                            sf_msgs = sf_result.get("messages", [])
-                        if sf_msgs:
-                            archived_count += await _process_forward_content(
-                                bot=bot, items=sf_msgs, group_id=group_id,
-                                default_user_id=sub_uid, default_msg_id=sub_mid,
-                            )
-                    except Exception as e:
-                        logger.warning("  嵌套 forward %s 无法展开: %s", sf_id, e)
+        for sf_seg in (s for s in sub_onebot if s.type == "forward"):
+            coros.append(
+                _process_nested_forward_seg(
+                    bot=bot, sf_seg=sf_seg, group_id=group_id,
+                    default_user_id=sub_uid, default_msg_id=sub_mid,
+                )
+            )
 
-        # 提取并处理媒体项（含 forward 的消息也可能同时有图片）
         media_items = classify_message(sub_onebot)
-        if not media_items:
-            continue
-
-        cfg = get_config()
         for idx, item in enumerate(media_items):
             if getattr(cfg.media_types, item.media_type, False):
-                ok = await _process_media_item(
-                    bot=bot, item=item, group_id=group_id,
-                    user_id=sub_uid, message_id=sub_mid, seq=idx,
-                    skip_url_refresh=True,
+                coros.append(
+                    _run_forward_media_item(
+                        bot=bot, item=item, group_id=group_id,
+                        user_id=sub_uid, message_id=sub_mid, seq=idx,
+                    )
                 )
-                if ok:
-                    archived_count += 1
 
+    if not coros:
+        return 0
+
+    if len(coros) > 1:
+        logger.warning(
+            "转发媒体并发处理 | 任务数: %d | get_file超时: %.0fs | get_file并发: 3",
+            len(coros), _GET_FILE_TIMEOUT,
+        )
+
+    results = await asyncio.gather(*coros, return_exceptions=True)
+    archived_count = 0
+    for r in results:
+        if isinstance(r, Exception):
+            logger.warning("转发子任务异常: %s", r)
+        elif isinstance(r, int):
+            archived_count += r
     return archived_count
 
 
@@ -1195,23 +1441,18 @@ async def _process_forward_message(
     优先用 get_msg 获取外层消息的 content（嵌套 forward 完整且图片带
     CDN URL）；get_forward_msg 对嵌套 forward 返回 1200 失败，仅作后备。
     """
-    from nonebot.adapters.onebot.v11 import Message, MessageSegment
-
     # 1) 主路径：get_msg 拿外层消息 content（含完整嵌套与 URL）
     try:
-        msg_resp = await bot.call_api("get_msg", message_id=source_message_id)
-        content = None
-        if isinstance(msg_resp, dict):
-            for seg in (msg_resp.get("data", {}).get("message") or []):
-                if seg.get("type") == "forward":
-                    content = seg.get("data", {}).get("content") or []
-                    break
+        msg_resp = await asyncio.wait_for(
+            bot.call_api("get_msg", message_id=source_message_id, _timeout=30),
+            timeout=32,
+        )
+        content = _forward_content_from_msg(msg_resp)
         if content:
             logger.warning(
                 "拆包合并转发消息(get_msg) | forward_id=%s | 源消息ID: %d | 内含 %d 条消息",
                 forward_id, source_message_id, len(content),
             )
-            # 存档转发中的网盘链接/提取码等文本信息
             await _archive_forward_links(
                 content=content, group_id=group_id,
                 source_message_id=source_message_id, user_id=user_id,
@@ -1221,25 +1462,29 @@ async def _process_forward_message(
                 default_user_id=user_id, default_msg_id=source_message_id,
             )
             return
+    except asyncio.TimeoutError:
+        logger.warning("get_msg 超时，尝试 get_forward_msg | 源消息ID: %d", source_message_id)
     except Exception as e:
         logger.warning("get_msg 获取转发消息失败，尝试 get_forward_msg: %s", e)
 
     # 2) 后备：get_forward_msg 拆包
     try:
-        result = await bot.call_api("get_forward_msg", id=forward_id)
+        result = await asyncio.wait_for(
+            bot.call_api("get_forward_msg", id=forward_id, _timeout=30),
+            timeout=32,
+        )
+    except asyncio.TimeoutError:
+        logger.warning("合并转发消息获取超时，跳过: forward_id=%s", forward_id)
+        return
     except Exception as e:
         logger.warning("合并转发消息无法获取，跳过: forward_id=%s, %s", forward_id, e)
         return
 
-    messages = []
-    if isinstance(result, dict):
-        messages = result.get("messages", [])
-
+    messages = _messages_from_forward_resp(result)
     if not messages:
         logger.debug("合并转发消息 %s 为空", forward_id)
         return
 
-    # 存档转发中的网盘链接/提取码等文本信息
     await _archive_forward_links(
         content=messages, group_id=group_id,
         source_message_id=source_message_id, user_id=user_id,
@@ -1250,74 +1495,10 @@ async def _process_forward_message(
         forward_id, source_message_id, len(messages),
     )
 
-    for inner in messages:
-        inner_msg_id = inner.get("message_id", 0)
-        # 转发拆包消息 ID 加偏移，避免与真实消息 ID 冲突（见 _FORWARD_ID_OFFSET）
-        inner_msg_id = inner_msg_id + _FORWARD_ID_OFFSET
-        inner_user_id = inner.get("user_id", 0) or inner.get("sender", {}).get("user_id", 0)
-        inner_user_id = inner_user_id or user_id
-        raw_segments = inner.get("message", [])
-
-        if not raw_segments:
-            continue
-
-        # 转成 MessageSegment 对象
-        try:
-            if isinstance(raw_segments, list) and isinstance(raw_segments[0], dict):
-                segs = [MessageSegment(type=s["type"], data=s.get("data", {})) for s in raw_segments if isinstance(s, dict)]
-                onebot_msg = Message(segs)
-            else:
-                onebot_msg = Message(raw_segments)
-        except Exception:
-            continue
-
-        # 递归处理内层 forward
-        forward_inner = [s for s in onebot_msg if s.type == "forward"]
-        if forward_inner:
-            for seg in forward_inner:
-                fid = seg.data.get("id", "")
-                if not fid:
-                    continue
-
-                content = seg.data.get("content") or seg.data.get("messages")
-                if content and isinstance(content, list):
-                    await _process_forward_content(
-                        bot=bot, items=content, group_id=group_id,
-                        default_user_id=inner_user_id,
-                        default_msg_id=inner_msg_id or source_message_id,
-                    )
-                else:
-                    try:
-                        fwd_result = await bot.call_api("get_forward_msg", id=fid)
-                        fwd_msgs = []
-                        if isinstance(fwd_result, dict):
-                            fwd_msgs = fwd_result.get("messages", [])
-                        if fwd_msgs:
-                            await _process_forward_content(
-                                bot=bot, items=fwd_msgs, group_id=group_id,
-                                default_user_id=inner_user_id,
-                                default_msg_id=inner_msg_id or source_message_id,
-                            )
-                    except Exception as e:
-                        logger.warning("内层 forward %s 无法展开: %s", fid, e)
-            continue
-
-        # 提取并处理媒体项
-        media_items = classify_message(onebot_msg)
-        if not media_items:
-            continue
-
-        cfg = get_config()
-        for idx, item in enumerate(media_items):
-            if not getattr(cfg.media_types, item.media_type, False):
-                continue
-
-            await _process_media_item(
-                bot=bot, item=item, group_id=group_id,
-                user_id=inner_user_id,
-                message_id=inner_msg_id or source_message_id,
-                seq=idx, skip_url_refresh=True,
-            )
+    await _process_forward_content(
+        bot=bot, items=messages, group_id=group_id,
+        default_user_id=user_id, default_msg_id=source_message_id,
+    )
 
 
 async def _on_bot_connect(bot: Bot) -> None:

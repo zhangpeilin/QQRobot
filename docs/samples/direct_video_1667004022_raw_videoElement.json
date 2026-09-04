@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "msgId": "7681652252285726700",
+    "chatType": 2,
+    "msgType": 7,
+    "peerUid": "663964060",
+    "peerUin": "663964060",
+    "senderUin": "512239520",
+    "msgTime": "1788524038"
+  },
+  "videoElement": {
+    "filePath": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-09\\Ori\\13a88228a3410f0c0a78f7257c63aedd.mp4",
+    "fileName": "13a88228a3410f0c0a78f7257c63aedd.mp4",
+    "videoMd5": "13a88228a3410f0c0a78f7257c63aedd",
+    "thumbMd5": "c67eb40e55ba4953c19bd975c439fcfb",
+    "fileTime": 32,
+    "thumbSize": 71768,
+    "fileFormat": 0,
+    "fileSize": "8006548",
+    "thumbWidth": 640,
+    "thumbHeight": 1138,
+    "busiType": 0,
+    "subBusiType": 0,
+    "thumbPath": {},
+    "transferStatus": 0,
+    "progress": 0,
+    "invalidState": 0,
+    "fileUuid": "EhR9PilBs9MAw1yp5Q-ig9ih-U0dpxiU1-gDIIcLKJSW5J_z1JYDMgRwcm9kUID1JFoQXpabQ9XuFW9akSH82E5ky3oC2QqCAQJuag",
+    "fileSubId": "",
+    "fileBizId": null,
+    "originVideoMd5": "",
+    "import_rich_media_context": null,
+    "sourceVideoCodecFormat": 1,
+    "storeID": 1,
+    "original": false,
+    "videoFrom": 0
+  }
+}

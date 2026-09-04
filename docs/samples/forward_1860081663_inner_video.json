@@ -1,0 +1,30 @@
+{
+  "self_id": 2065277052,
+  "user_id": 1094950020,
+  "time": 1788160126,
+  "message_id": 1319670661,
+  "message_seq": 1319670661,
+  "real_id": 1319670661,
+  "real_seq": "1432",
+  "message_type": "private",
+  "sender": {
+    "user_id": 1094950020,
+    "nickname": "QQ用户",
+    "card": ""
+  },
+  "raw_message": "[CQ:video,file=847bceaa5385d27184b796256345d9e5.mp4,url=D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4,file_size=1643394]",
+  "font": 14,
+  "sub_type": "friend",
+  "message_format": "array",
+  "post_type": "message",
+  "message": [
+    {
+      "type": "video",
+      "data": {
+        "file": "847bceaa5385d27184b796256345d9e5.mp4",
+        "url": "D:\\QQFile\\Tencent Files\\Tencent Files\\2065277052\\nt_qq\\nt_data\\Video\\2026-08\\Ori\\847bceaa5385d27184b796256345d9e5.mp4",
+        "file_size": "1643394"
+      }
+    }
+  ]
+}
