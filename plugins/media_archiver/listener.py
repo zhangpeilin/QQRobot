@@ -354,11 +354,20 @@ async def _process_media_item(
         else:
             try:
                 result = await _downloader.download(download_url, temp_dir)
-            except DownloadError:
-                # CDN 下载失败 -> 尝试从 NapCat 本地缓存复制
-                # （图片收到时自动缓存 Pic 目录；get_file 可按文件名
-                #   命中缓存或从服务器搜索下载）
-                if item.media_type in ("video", "record", "file", "image"):
+            except DownloadError as e:
+                logger.warning("%s CDN 下载失败: %s", tag, e)
+                # 嵌套转发里内核常给 appid=1406（私聊 rkey），multimedia CDN
+                # 直连失败。文件名是 32 位 MD5 时，旧图床 gchatpic_new 能下。
+                if item.media_type == "image":
+                    md5_url = _gchatpic_url_from_filename(item.file_name)
+                    if md5_url and md5_url != download_url:
+                        try:
+                            logger.warning("%s 尝试 gchatpic MD5 回退: %s", tag, md5_url)
+                            result = await _downloader.download(md5_url, temp_dir)
+                        except DownloadError as e2:
+                            logger.warning("%s gchatpic MD5 回退失败: %s", tag, e2)
+                # CDN / MD5 都失败 -> 本地缓存，再 get_file
+                if result is None and item.media_type in ("video", "record", "file", "image"):
                     local_path = await _copy_local_file(item, temp_dir)
                     if local_path is None:
                         # 本地缓存全无 -> get_file 命中资源引用缓存换 CDN URL
@@ -818,6 +827,25 @@ async def _get_fresh_url(bot: Bot, item: MediaItem) -> str | None:
                 )
 
     return None
+
+
+_MD5_FILENAME = re.compile(r"^([0-9A-Fa-f]{32})\b")
+
+
+def _gchatpic_url_from_filename(file_name: str) -> str:
+    """从图片文件名拼 QQ 旧图床 URL。
+
+    NapCat `getImageUrlFromMd5`：`https://gchat.qpic.cn/gchatpic_new/0/0-0-{MD5}/0`。
+    嵌套转发 originImageUrl 为 appid=1406 时 multimedia CDN 常 4xx，这条还能下。
+    文件名不是 32 位 hex MD5（例如 `{uuid}.jpg`）时返回空串。
+    """
+    if not file_name:
+        return ""
+    stem = Path(file_name).name
+    matched = _MD5_FILENAME.match(stem)
+    if not matched:
+        return ""
+    return f"https://gchat.qpic.cn/gchatpic_new/0/0-0-{matched.group(1).upper()}/0"
 
 
 def _is_local_path(url: str) -> bool:

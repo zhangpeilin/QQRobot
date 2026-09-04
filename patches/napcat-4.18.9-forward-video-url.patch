@@ -1,8 +1,6 @@
-diff --git a/NapCat/napcat.mjs.orig b/NapCat/napcat.mjs
-index b024373..59dbf54 100644
 --- a/NapCat/napcat.mjs.orig
 +++ b/NapCat/napcat.mjs
-@@ -9325,8 +9325,9 @@ class oQ {
+@@ -9325,8 +9325,9 @@
      if (this.core.apis.PacketApi.packetStatus && n) {
        const i = new fe(zI).decode(Buffer.from(n.replaceAll("-", "+").replaceAll("_", "/"), "base64")).appid;
        try {
@@ -14,7 +12,44 @@ index b024373..59dbf54 100644
              fileUuid: n,
              storeId: 1,
              uploadTime: 0,
-@@ -72687,6 +72688,8 @@ class U0e {
+@@ -72504,24 +72505,31 @@
+     },
+     picElement: async (e, n, r, { disableGetUrl: i }) => {
+       try {
++        const _uid = n.parentMsgPeer && /^\d+$/.test(String(n.parentMsgPeer.peerUid || "")) ? n.parentMsgPeer.peerUid : n.peerUid;
+         const o = {
+-          chatType: n.chatType,
+-          peerUid: n.peerUid,
++          chatType: _uid !== n.peerUid && n.parentMsgPeer && n.parentMsgPeer.chatType ? n.parentMsgPeer.chatType : n.chatType,
++          peerUid: _uid,
+           guildId: ""
+         };
+-        return Jt.encode(
++        Jt.encode(
+           o,
+           n.msgId,
+           r.elementId,
+           e.fileUuid,
+           e.fileName
+-        ), {
++        );
++        let _url = i ? e.filePath ?? "" : await this.core.apis.FileApi.getImageUrl(e);
++        if (!i && _uid !== n.peerUid && typeof _url === "string" && _url.includes("appid=1406") && e.md5HexStr) {
++          const _md5 = this.core.apis.FileApi.getImageUrlFromMd5(e.md5HexStr, e.md5HexStr);
++          _md5 && (this.core.context.logger.logWarn("转发图片URL改用MD5 " + _uid), _url = _md5);
++        }
++        return {
+           type: ze.image,
+           data: {
+             summary: e.summary,
+             file: e.fileName,
+             sub_type: e.picSubType,
+-            url: i ? e.filePath ?? "" : await this.core.apis.FileApi.getImageUrl(e),
++            url: _url,
+             file_size: e.fileSize
+           }
+         };
+@@ -72723,6 +72731,8 @@
          peerUid: n.peerUid,
          guildId: ""
        };
@@ -23,7 +58,7 @@ index b024373..59dbf54 100644
        let s;
        if (n.peerUin === "284840486" || n.peerUin === "1094950020")
          try {
-@@ -72719,7 +72722,7 @@ class U0e {
+@@ -72755,7 +72765,7 @@
              a = await xw(
                "video-url-get",
                {

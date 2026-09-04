@@ -89,7 +89,7 @@ OneBot 相关：`reportSelfMessage: false`（小号自己发的消息不会上�
 - `tasklist` 等控制台子系统程序必须带 `CREATE_NO_WINDOW`，否则面板轮询会反复弹黑窗。
 - 日志：`logs/bot_out.log`、`logs/bot_err.log`（面板「归档日志」读这个）、`logs/ui_server.log`。同一文件可能混 GBK（旧控制台 bot）和 UTF-8（面板启动的 bot，`PYTHONIOENCODING=utf-8`）。读日志必须**按行**先 UTF-8 再 GBK，不能整段一种编码。
 - 改 bot / 面板后：bot 需在面板点「停止 Bot」再「启动 Bot」才加载新代码；只改 `ui_server.py` 则要重启 8899。
-- 测试：`venv\Scripts\python.exe -m pytest tests`（`test_classifier.py`、`test_link_archive.py`、`test_forward_video_fallback.py`）。
+- 测试：`venv\Scripts\python.exe -m pytest tests`（`test_classifier.py`、`test_link_archive.py`、`test_forward_video_fallback.py`、`test_forward_image_fallback.py`）。
 - Python ≥3.11，当前 venv 是 3.14。风格跟现有代码：中文注释、ruff line-length 120。
 
 ---
@@ -174,7 +174,7 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 - `getVideoUrlPacket` ~9324：appid 1415 → `GetGroupVideoUrl(+e)`
 - `MH.build` ~14787：`groupUin` 必须是数字；schema `Pi.GroupUin` 是 `UINT32`
 - `parseMultiMessageContent` ~73159：内层消息 **有** `parentMsgPeer`，视频转换没用它
-- 图片 `getImageUrl` ~9503：用 `originImageUrl` 里现成的 `appid=1407&fileid=...` 再补 rkey，**不需要群号**
+- 图片 `getImageUrl` ~9503：`originImageUrl` 已是 `appid=1407` 时补 **group_rkey** 就能直连，不需要群号。若内层是 `appid=1406`（私聊 rkey），见下节「转发嵌套图片」
 
 占位 UIN：`1094950020`（假发送者）、`284840486`（`get_forward_msg` 模板假群）。归档出现 `1094950020_` 就是这个，不是原作者。
 
@@ -208,7 +208,7 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 原文件：`NapCat/napcat.mjs.orig`，SHA256 `845E15BE97ECD0F2B3F353C6A235E1F5C111CD53FEE6F1952A3A68A01DAA9CD9`。  
 重放：`venv\Scripts\python.exe patches\apply_napcat_forward_video_url.py`  
 还原：同上加 `--restore`  
-探活：`venv\Scripts\python.exe patches\probe_forward_video_urls.py --id <message_id>`（QQ 刚重启时短 ID 表是空的，先 `get_group_msg_history` 再 `get_forward_msg`）。
+探活：`venv\Scripts\python.exe patches\probe_forward_video_urls.py --id <message_id>`（QQ 刚重启时短 ID 表是空的，先 `get_group_msg_history` 再 `get_forward_msg`）。图片：`patches\probe_forward_images.py`。
 
 改完必须重启 **NapCat 注入的那棵 QQ 进程**（`NapCatWinBootMain.exe` 的进程树）。本机还有主号 QQ，**禁止** `taskkill /IM QQ.exe`。面板「停止 NapCat」会杀全部 QQ.exe，有主号在线时不要用。
 
@@ -234,6 +234,40 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 - 当「没归档」只搜 `512239520_`：文件名经常是 `1094950020_`
 - 把失败 `url` 留空：classifier 丢段，主号已缓存的转发视频也会不再归档
 - 升级 NapCat 后以为补丁还在：`napcat.mjs` 会被覆盖，必须重放 `patches/apply_napcat_forward_video_url.py` 再重启注入进程
+- 把转发图片 `appid=1406` 的 fileid 改成 `1407` 再下：fileid 编码不同（`_goo` vs `_woo`），会 HTTP 400 `retcode=-5503023`
+
+---
+
+## 转发嵌套图片：手机能开、bot 报 1406 下载失败（2026-09-04）
+
+样例：群 `663964060`、`message_id=11912981`、`forward_id=7681684748037124985`、22:20:03。内层 7 条（再嵌套），**57 张图**当时全失败。JSON：`docs/samples/forward_11912981_images.json`。
+
+### 不是视频补丁回归
+
+对照 `NapCat/napcat.mjs.orig`：`picElement` / `getImageUrl` 与原版一致。视频补丁只动了 `getVideoUrlPacket` 和 `videoElement`。同一时段群里**直接发**的图（`appid=1407`）都归档成功。
+
+### 一句话
+
+**拆包成功了，错在图片 URL 的 appid。** 内层来自私聊/匿名转发时，内核 `originImageUrl` 是 `appid=1406`，`getImageUrl` 配 **private_rkey**。这条 multimedia CDN 直连失败（私聊图在本仓库里一直如此，以前能下是因为 Pic 缓存还在）。手机 QQ 用当前群场景去拉，能打开；点开之后内核会把 URL 刷成 `appid=1407` + `_woo` fileid。
+
+当时 bot 日志全是 `appid=1406` + `get_file file not found`（Jt 缓存按内层 dummy peer 存，也救不了）。事后 `get_msg` / `get_forward_msg` 已是 57/57 `appid=1407`，HTTP 200 JPEG。同 MD5 的旧图床 `https://gchat.qpic.cn/gchatpic_new/0/0-0-{MD5}/0` 也能 200（与 `file_size` 一致）。
+
+| 谁 | URL | 结果 |
+|---|---|---|
+| 群里直接发的图 | `appid=1407` + group_rkey | 成功 |
+| 上次 `1860081663` 转发里的图 | 本来就是 `1407` | 成功 |
+| 这次 `11912981` 嵌套转发图（接收当时） | `appid=1406` + private_rkey | HTTP 失败，无本地缓存 |
+| 同上，手机点开之后 / 再 `get_forward_msg` | 刷成 `1407` | 成功 |
+| 同上，文件名是 32 位 MD5 | `gchatpic_new/0/0-0-{MD5}/0` | 成功 |
+
+### 已修（bot 立刻生效；NapCat 下次重启注入后生效）
+
+1. **bot** `listener.py`：图片 CDN 失败后，文件名是 32 位 MD5 则先试 gchatpic，再本地 / `get_file`。测试 `tests/test_forward_image_fallback.py`。补归档：`venv\Scripts\python.exe patches\archive_forward_images.py --id 11912981`。
+2. **NapCat** `picElement`：`parentMsgPeer` 是数字群号时，`Jt.encode` 用父会话；若生成的 URL 含 `appid=1406` 且有 `md5HexStr`，改成 `getImageUrlFromMd5`。日志 `转发图片URL改用MD5 663964060`。同一 `patches/apply_napcat_forward_video_url.py` 重放。
+
+改 bot 后面板停/启 Bot；NapCat 图片补丁要重启 NapCatWinBootMain 进程树才加载，**不要** `taskkill /IM QQ.exe`。
+
+核实（2026-09-04 22:39，当前 OneBot 已是 1407）：`archive_forward_images.py --id 11912981` → **51 张新归档 + 6 张 MD5 已存在跳过 + 0 失败**，目录 `data/archive/663964060/images/2026-09/04/1094950020_*`。
 
 ---
 
