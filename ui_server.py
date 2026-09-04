@@ -19,11 +19,21 @@ ROOT = Path(__file__).parent
 LOGS_DIR = ROOT / "logs"
 NAPCAT_DIR = ROOT / "NapCat"
 ARCHIVE_DIR = ROOT / "data" / "archive"
-PORT = 8090
+PORT = 8899
 
 # 状态缓存
 _cache = {"ts": 0.0, "data": {}}
 _qq_cache = {"ts": 0.0, "data": None}
+_stdio_log = None
+
+
+def _redirect_stdio() -> None:
+    """pythonw 下 stdout/stderr 为 None，http.server 写访问日志会崩掉连接。"""
+    global _stdio_log
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    _stdio_log = open(LOGS_DIR / "ui_server.log", "a", encoding="utf-8", buffering=1)
+    sys.stdout = _stdio_log
+    sys.stderr = _stdio_log
 
 
 def _port_open(port: int) -> bool:
@@ -41,6 +51,7 @@ def _proc_names() -> set:
         out = subprocess.run(
             ["tasklist", "/FO", "CSV", "/NH"],
             capture_output=True, timeout=6,
+            creationflags=subprocess.CREATE_NO_WINDOW,
         )
         names = set()
         for line in out.stdout.decode("gbk", errors="replace").splitlines():
@@ -110,6 +121,14 @@ def _status() -> dict:
     return data
 
 
+def _decode_log_line(line: bytes) -> str:
+    # 同一文件里可能混有旧 GBK 和新 UTF-8，必须按行判断
+    try:
+        return line.decode("utf-8")
+    except UnicodeDecodeError:
+        return line.decode("gbk", errors="replace")
+
+
 def _tail_log(path: Path, lines: int = 200) -> str:
     try:
         with open(path, "rb") as f:
@@ -117,12 +136,12 @@ def _tail_log(path: Path, lines: int = 200) -> str:
             size = f.tell()
             f.seek(max(0, size - 128 * 1024))
             raw = f.read()
-        # 自动检测编码：先 UTF-8，失败回退 GBK（旧 bot 的 stderr 为 GBK）
-        try:
-            text = raw.decode("utf-8")
-        except UnicodeDecodeError:
-            text = raw.decode("gbk", errors="replace")
-        return "\n".join(text.splitlines()[-lines:])
+        if size > 128 * 1024:
+            nl = raw.find(b"\n")
+            if nl != -1:
+                raw = raw[nl + 1 :]
+        text_lines = [_decode_log_line(line) for line in raw.splitlines()]
+        return "\n".join(text_lines[-lines:])
     except Exception as e:
         return f"日志读取失败: {e}"
 
@@ -155,6 +174,80 @@ def _stop_napcat() -> str:
     return "NapCat 停止中（UAC 确认后生效）"
 
 
+def _run_hidden(args: list[str], timeout: int = 8) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        args,
+        capture_output=True,
+        timeout=timeout,
+        cwd=str(ROOT),
+        creationflags=subprocess.CREATE_NO_WINDOW,
+    )
+
+
+def _bot_pids() -> list[int]:
+    """python.exe / pythonw.exe 里命令行带 bot.py 的进程（不含 ui_server）。"""
+    ps = (
+        "Get-CimInstance Win32_Process | "
+        "Where-Object { "
+        "($_.Name -eq 'python.exe' -or $_.Name -eq 'pythonw.exe') -and "
+        "$_.CommandLine -and ($_.CommandLine -match '(^|\\s|\\\\)bot\\.py(\\s|\"|$)') "
+        "} | ForEach-Object { $_.ProcessId }"
+    )
+    try:
+        out = _run_hidden(["powershell", "-NoProfile", "-Command", ps]).stdout
+        text = out.decode("utf-8", errors="replace")
+        pids = []
+        for tok in text.split():
+            if tok.isdigit():
+                pids.append(int(tok))
+        return pids
+    except Exception:
+        return []
+
+
+def _listening_pid(port: int) -> int | None:
+    try:
+        out = _run_hidden(["netstat", "-ano"]).stdout.decode("gbk", errors="replace")
+    except Exception:
+        return None
+    suffix = f":{port}"
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) < 5 or parts[0].upper() != "TCP":
+            continue
+        if parts[3].upper() != "LISTENING":
+            continue
+        if parts[1] == f"0.0.0.0:{port}" or parts[1].endswith(suffix):
+            try:
+                return int(parts[-1])
+            except ValueError:
+                return None
+    return None
+
+
+def _pid_is_python(pid: int) -> bool:
+    try:
+        out = _run_hidden(
+            ["powershell", "-NoProfile", "-Command",
+             f"(Get-CimInstance Win32_Process -Filter \"ProcessId={pid}\").Name"]
+        ).stdout.decode("utf-8", errors="replace").strip().lower()
+        return out in {"python.exe", "pythonw.exe"}
+    except Exception:
+        return False
+
+
+def _kill_pids(pids: list[int]) -> None:
+    seen: set[int] = set()
+    for pid in pids:
+        if pid in seen or pid <= 0:
+            continue
+        seen.add(pid)
+        try:
+            _run_hidden(["taskkill", "/F", "/T", "/PID", str(pid)], timeout=10)
+        except Exception:
+            pass
+
+
 def _start_bot() -> str:
     if _status()["bot_running"]:
         return "bot 已在运行"
@@ -173,14 +266,27 @@ def _start_bot() -> str:
 
 
 def _stop_bot() -> str:
-    subprocess.Popen(
-        ["powershell", "-NoProfile", "-Command",
-         "Get-CimInstance Win32_Process -Filter \"Name='python.exe'\" | "
-         "Where-Object { $_.CommandLine -match 'bot.py' } | "
-         "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"],
-        creationflags=subprocess.CREATE_NO_WINDOW,
-    )
-    return "bot 停止中"
+    _cache["ts"] = 0.0
+    pids = _bot_pids()
+    listen = _listening_pid(8080)
+    if listen and _pid_is_python(listen) and listen not in pids:
+        pids.append(listen)
+    if not pids and not _port_open(8080):
+        return "bot 未在运行"
+    _kill_pids(pids)
+    deadline = time.time() + 6
+    while time.time() < deadline:
+        still = _bot_pids()
+        if not still and not _port_open(8080):
+            _cache["ts"] = 0.0
+            return "bot 已停止"
+        if still:
+            _kill_pids(still)
+        time.sleep(0.25)
+    _cache["ts"] = 0.0
+    if _port_open(8080) or _bot_pids():
+        return "bot 停止失败，进程仍在"
+    return "bot 已停止"
 
 
 def _open_dir(path: Path) -> str:
@@ -355,12 +461,17 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"QQ 归档控制面板: http://127.0.0.1:{PORT}")
+    _redirect_stdio()
     try:
+        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+        print(f"QQ 归档控制面板: http://127.0.0.1:{PORT}", flush=True)
         server.serve_forever()
     except KeyboardInterrupt:
         pass
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 if __name__ == "__main__":
