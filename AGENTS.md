@@ -63,7 +63,9 @@ QQ.exe  ← DLL 注入 ←  NapCatWinBootMain.exe (E:\QQRobot\NapCat)
 | `start_ui.bat` / `stop_ui.bat` | 启停面板 |
 | `start_napcat.bat` | 提权后启动 NapCat Desktop |
 | `venv\Scripts\pythonw.exe` | 面板和从面板拉起的 bot 都用这个 |
-| `docs/2026-09-04-转发视频下载失败分析.md` | 嵌套转发视频失败的完整 JSON / NapCat 源码对照。结论已摘进下文「转发嵌套视频」节，不要当新 bug 重做实验 |
+| `docs/2026-09-04-转发视频下载失败分析.md` | 嵌套转发视频失败的完整 JSON / NapCat 源码对照。结论已摘进下文「转发嵌套视频」节 |
+| `patches/apply_napcat_forward_video_url.py` | 给 gitignore 的 `NapCat/napcat.mjs`（4.18.9）打/重放转发视频 URL 补丁 |
+| `patches/napcat-4.18.9-forward-video-url.patch` | 同上的 unified diff，原文件 SHA256 `845E15BE…A9CD9` |
 
 归档路径：
 
@@ -80,7 +82,7 @@ OneBot 相关：`reportSelfMessage: false`（小号自己发的消息不会上�
 ## 工作约定
 
 - 改代码前先读现有实现；用户说「先排查不要改」就只诊断。
-- 转发视频「手机能下、bot 下不了」先读下文「转发嵌套视频」节，不要再加大 `get_file` 超时或重写 B1。
+- 转发视频「手机能下、bot 下不了」先读下文「转发嵌套视频」节。本地 NapCat 4.18.9 已打补丁；升级覆盖 `napcat.mjs` 后用 `patches/apply_napcat_forward_video_url.py` 重放，不要再加大 `get_file` 超时或重写 B1。
 - 控制面板和 bot 都是 `pythonw`。本机还有别的 `pythonw`（如 SnapWC `host.py`、`voice_alarm_tray.py`），**禁止**按进程名无差别杀 `python.exe` / `pythonw.exe`。停 bot 只杀命令行匹配 `bot.py` 的进程；停 UI 只杀监听 8899 或命令行含 `ui_server.py` 的进程。
 - 从本 agent 拉起的子进程会被 Job Object 一并杀掉。需要面板在会话结束后仍活着时，用 WMI `Win32_Process.Create` 启动，不要 `Start-Process`。
 - `pythonw` 下 `sys.stdout` / `sys.stderr` 为 `None`。`http.server` 写访问日志会崩连接。改 `ui_server.py` 时不要拿掉 `_redirect_stdio()`。
@@ -138,7 +140,7 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 - `_GET_FILE_SEM = 3`；同层媒体 + 嵌套转发 `asyncio.gather`
 - `file not found` 立刻放弃，不空等
 
-**B1 救不了嵌套转发里那批无缓存视频**（见下一节）。不要再加大超时、不要再写一遍 get_file 回退。
+**B1 救不了嵌套转发里那批无缓存视频**。2026-09-04 已改本地 `napcat.mjs`（见下一节），不要再加大超时、不要再写一遍 get_file 回退。
 
 ---
 
@@ -185,7 +187,7 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 | 群里**直接发**的视频 | 20:13:58 `13a88228…`，`peerUid=663964060` | `https://multimedia.nt.qq.com.cn/download?appid=1415&…` | 可有可无（归档完缓存可能已删） | HTTP | **成功** |
 | 同条转发里的**图片** | 20:18:39 那 24 张 | 段里已有 `appid=1407&fileid=` | 不依赖 | HTTP | **成功** |
 | 转发视频，但**主号已经下过** | 20:16:41 `1741796593`（`Video\2026-09\Ori`） | 假本地路径（同样 NaN） | 主号有文件 | 跨账号复制 | **成功**（NapCat URL 仍是坏的） |
-| 嵌套转发里的**私聊录像**，谁都没缓存 | 20:18:39 `1860081663` 的 11 个，路径在 `2026-08\Ori` | 假本地路径 | 小号无、主号无 | 复制失败 → get_file 40s 超时 | **失败** |
+| 嵌套转发里的**私聊录像**，谁都没缓存 | 20:18:39 `1860081663` 的 11 个 | 补丁前假本地路径；补丁后 `appid=1415` CDN | 不需要 | HTTP | **补丁后成功** |
 
 这批失败视频的共同特征（缺一不可）：
 
@@ -194,27 +196,51 @@ NoneBot `call_api` 通常已解开 OneBot `data`。旧代码 `msg_resp.get("data
 3. NapCat 却拿**内层 UID 字符串**当群号
 4. QQ **不会**因为你点开聊天记录就把视频预下载到接收号 `nt_data`；手机点下载是当时向 CDN 拉，不是读 PC 缓存
 
-### 治本（还没做，不要用 bot 再绕）
+### 治本（2026-09-04 已改本地 NapCat 4.18.9，已核实）
 
-改 `napcat.mjs`（或等上游；硬改 minify 后升级会被覆盖）：
+`NapCat/` 整个在 `.gitignore` 里，改动用补丁进 git，不把 3MB minify 提交进去。
 
-1. `getVideoUrlPacket`：`e` 不是纯数字就不要 `GetGroupVideoUrl(+e)`；改走 C2C `GetVideoUrl(uid字符串)`，或用 `parentMsgPeer.peerUid`（群号）
-2. `videoElement` 失败时不要把不存在的 `filePath` 填进 `url`；留空，让 bot 知道没 URL
-3. 不要把 `get_file`/`downloadMedia` 超时加很长来赌内核
+补丁做了两处，**没有**把失败时的 `url` 留空（classifier 无 URL 会丢段，主号缓存那条跨账号复制也会断）：
+
+1. `getVideoUrlPacket`：`e` 转成整数且 `>0` 才走 `GetGroupVideoUrl`，否则走 C2C `GetVideoUrl`。不再 `+u_xxxx → NaN`。
+2. `videoElement`：`parentMsgPeer.peerUid` 是纯数字群号时，packet 用它而不是内层 UID。日志会出现 `转发视频URL改用父会话 663964060`。
+
+原文件：`NapCat/napcat.mjs.orig`，SHA256 `845E15BE97ECD0F2B3F353C6A235E1F5C111CD53FEE6F1952A3A68A01DAA9CD9`。  
+重放：`venv\Scripts\python.exe patches\apply_napcat_forward_video_url.py`  
+还原：同上加 `--restore`  
+探活：`venv\Scripts\python.exe patches\probe_forward_video_urls.py --id <message_id>`（QQ 刚重启时短 ID 表是空的，先 `get_group_msg_history` 再 `get_forward_msg`）。
+
+改完必须重启 **NapCat 注入的那棵 QQ 进程**（`NapCatWinBootMain.exe` 的进程树）。本机还有主号 QQ，**禁止** `taskkill /IM QQ.exe`。面板「停止 NapCat」会杀全部 QQ.exe，有主号在线时不要用。
+
+### 核实结果（1860081663，2026-09-04 21:58）
+
+| 检查 | 结果 |
+|---|---|
+| 新日志 `invalid uint 32` | **0**（旧日志 102 次） |
+| `转发视频URL改用父会话 663964060` | 有 |
+| `get_forward_msg` 11 个视频 `url` | 全部 `https://multimedia.nt.qq.com.cn/download?appid=1415&…` |
+| HTTP 下载 | 11/11 HTTP 200，body 是 mp4，大小与 `file_size` 一致 |
+| 归档 | `data/archive/663964060/videos/2026-09/04/1094950020_*`，首个 MD5 前缀 `847bceaa`（就是原先失败的那条） |
+| 只传 resid、不传外层 message_id | 拆不出这 11 个视频。bot 走数字 `message_id`，这条路径够用 |
+
+内核 `getVideoUrl`（「合并获取视频 URL 失败」）仍然会失败，这是预期；CDN 来自 packet `GetGroupVideoUrl(父群号)`。
 
 ### 不要再试（已验证无效）
 
-- 打开 `parseMultMsg=true`：上报变大，URL 仍走同一套 `videoElement`，一样 NaN
+- 打开 `parseMultMsg=true`：上报变大，URL 仍走同一套 `videoElement`；没补丁时一样 NaN
 - 只在主号缓存里盲搜：20:18 这 11 个 hash 主号就没有
 - 把 `get_file` `_timeout` 拉到 300s / 再重试：内核问错会话，空等 120s 也不会落盘，还会堵死 OneBot
 - 再实现一遍「转发也 get_file」（B1 已在 `listener.py`，测试 `tests/test_forward_video_fallback.py`）
 - 当「没归档」只搜 `512239520_`：文件名经常是 `1094950020_`
+- 把失败 `url` 留空：classifier 丢段，主号已缓存的转发视频也会不再归档
+- 升级 NapCat 后以为补丁还在：`napcat.mjs` 会被覆盖，必须重放 `patches/apply_napcat_forward_video_url.py` 再重启注入进程
 
 ---
 
 ## 已排查、尚未改代码的问题
 
-- **嵌套转发视频无 CDN、无本地缓存**：根因是上一节 NapCat `GetGroupVideoUrl(+非数字 peerUid)`。bot B1 已做完，再修只能改 NapCat。2026-09-03 的 `dc83f60c…` / `9b46f94e…` 和 08:41 独立视频若当时也是假本地路径，同一类问题。
+- **部分转发视频 packet 已发出但回包没有 `download.info`**：日志 `GetGroupVideoUrl` → `Cannot read properties of undefined (reading 'info')`。OIDB 发出去了（不再是 NaN），服务端没给 URL。与 1860081663 这 11 条无关。不要为此再改 B1。
+- **`get_forward_msg` 只拿 resid、没有外层群 peer**：模板 `parentMsgPeer.peerUid=""`，补丁用不上父群号。bot 用外层数字 `message_id`。
 - **历史扫描统计会骗人**：`_process_history_message` 处理完转发后可能返回 0，日志里「含媒体: 0 | 归档: 0」不代表没存。
 - **小号自己转发**：`reportSelfMessage: false` 时 NapCat 不上报，bot 不会归档。用主号转到监听群才能被收到。
 - **合并转发被 QQ 风控**：不是 NapCat 没推。风控拦了则协议层也没有这条，bot 无消息可处理。
@@ -234,4 +260,6 @@ NapCat      start_napcat.bat      （要管理员；扫码登小号）
 日志        E:\QQRobot\logs\
 归档        E:\QQRobot\data\archive\
 NapCat UI   http://127.0.0.1:6099/web/   token 在 NapCat\config\webui.json
+重放补丁    venv\Scripts\python.exe patches\apply_napcat_forward_video_url.py
+            然后只重启 NapCatWinBootMain 进程树，不要 taskkill /IM QQ.exe
 ```

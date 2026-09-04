@@ -1,0 +1,34 @@
+diff --git a/NapCat/napcat.mjs.orig b/NapCat/napcat.mjs
+index b024373..59dbf54 100644
+--- a/NapCat/napcat.mjs.orig
++++ b/NapCat/napcat.mjs
+@@ -9325,8 +9325,9 @@ class oQ {
+     if (this.core.apis.PacketApi.packetStatus && n) {
+       const i = new fe(zI).decode(Buffer.from(n.replaceAll("-", "+").replaceAll("_", "/"), "base64")).appid;
+       try {
+-        if (i && i === 1415)
+-          return this.core.apis.PacketApi.pkt.operation.GetGroupVideoUrl(+e, {
++        const g = +e;
++        if (i && i === 1415 && Number.isInteger(g) && g > 0)
++          return this.core.apis.PacketApi.pkt.operation.GetGroupVideoUrl(g, {
+             fileUuid: n,
+             storeId: 1,
+             uploadTime: 0,
+@@ -72687,6 +72688,8 @@ class U0e {
+         peerUid: n.peerUid,
+         guildId: ""
+       };
++      const _uid = n.parentMsgPeer && /^\d+$/.test(String(n.parentMsgPeer.peerUid || "")) ? n.parentMsgPeer.peerUid : n.peerUid;
++      _uid !== n.peerUid && this.core.context.logger.logWarn("转发视频URL改用父会话 " + _uid);
+       let s;
+       if (n.peerUin === "284840486" || n.peerUin === "1094950020")
+         try {
+@@ -72719,7 +72722,7 @@ class U0e {
+             a = await xw(
+               "video-url-get",
+               {
+-                resourceFn: async () => await this.core.apis.FileApi.getVideoUrlPacket(n.peerUid, e.fileUuid, 1500),
++                resourceFn: async () => await this.core.apis.FileApi.getVideoUrlPacket(_uid, e.fileUuid, 1500),
+                 healthCheckFn: async () => await this.core.apis.PacketApi.pkt.operation.FetchRkey().then(() => !0).catch(() => !1),
+                 testArgs: [],
+                 healthCheckInterval: 3e4,
